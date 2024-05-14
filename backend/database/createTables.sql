@@ -50,6 +50,7 @@ Create Table expenses (
 CREATE TABLE bezahlt_fuer (
     expense INT NOT NULL,
     member INT NOT NULL,
+    PRIMARY KEY (expense, member),
     FOREIGN KEY (expense) REFERENCES expenses(id),
     FOREIGN KEY (member) REFERENCES users(id)
 );
