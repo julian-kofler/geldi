@@ -1,11 +1,7 @@
 npm init -y
-npm i express
 npm i -D -G nodemon
-npm i --save-dev @types/node
-npm i @types/express @types/node      
-npm i typescript
+npm i mysql2 bcryptjs jsonwebtoken dotenv nodemailer express typescript node-cron crypto-es crypto
+npm i --save-dev @types/mysql @types/bcryptjs @types/jsonwebtoken @types/node @types/express @types/node-cron
 tsc --init      #create config file for ts files
 tsc             #compile
-nodemon
-npm install mysql bcryptjs jsonwebtoken dotenv
-npm install --save-dev @types/mysql @types/bcryptjs @types/jsonwebtoken
+nodemon         #start server
