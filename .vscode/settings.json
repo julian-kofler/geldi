@@ -9,8 +9,8 @@
             "server": "localhost",
             "port": 3306,
             "driver": "MySQL",
-            "name": "Ausgabenverwaltung",
-            "database": "Ausgabenverwaltung",
+            "name": "expense_management",
+            "database": "expense_management",
             "username": "root"
         }
     ]

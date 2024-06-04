@@ -1,4 +1,4 @@
-import express, { Express, Request, Response, NextFunction, RequestHandler } from "express";
+import express, { Request, Response } from "express";
 
 import { getConnection } from "../database.js";
 import { Auth } from '../auth.js';
