@@ -39,4 +39,11 @@ if (!fs.existsSync('tsconfig.json'))
     console.log("tsconfig.json created. Please modify it as needed.");
   }
 
+// Update package.json
+const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+packageJson.scripts = packageJson.scripts || {};
+packageJson.scripts.start = 'nodemon ./build/server.js';
+packageJson.type = "module";
+fs.writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
+
 console.log('Setup complete. You can now compile the code using "tsc"\nand start the server with "nodemon".');
