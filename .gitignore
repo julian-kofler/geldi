@@ -1,4 +1,6 @@
 .env
-node_modules/
 .vscode
+node_modules/
 build/
+package.json
+package-lock.json

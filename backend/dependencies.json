@@ -1,0 +1,28 @@
+{
+    "globalDependencies": [
+      "nodemon",
+      "ts-node"
+    ],
+    "localDependencies": [
+      "mysql2",
+      "bcryptjs",
+      "jsonwebtoken",
+      "dotenv",
+      "nodemailer",
+      "express",
+      "typescript",
+      "node-cron",
+      "crypto-es",
+      "zxcvbn"
+    ],
+    "devDependencies": [
+      "@types/mysql",
+      "@types/bcryptjs",
+      "@types/jsonwebtoken",
+      "@types/node",
+      "@types/express",
+      "@types/node-cron",
+      "@types/nodemailer",
+      "@types/zxcvbn"
+    ]
+  }
