@@ -18,6 +18,8 @@ if (!fs.existsSync('.env')) {
   console.log('.env file created. Please fill in the values.');
 }
 
+execSync('npm init -y', { stdio: 'inherit' });
+
 // Read dependencies from dependencies.json
 const dependencies = JSON.parse(fs.readFileSync('dependencies.json', 'utf-8'));
 
@@ -40,10 +42,14 @@ if (!fs.existsSync('tsconfig.json'))
   }
 
 // Update package.json
-const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
-packageJson.scripts = packageJson.scripts || {};
-packageJson.scripts.start = 'nodemon ./build/server.js';
-packageJson.type = "module";
-fs.writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
+if(fs.existsSync('package.json')) {
+  const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+  packageJson.type = "module";
+  packageJson.main = "build/server.js";
+  fs.writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
+}
+else{
+  console.log("package.json not found. Please check if the dependencies are correctly installed.");
+}
 
 console.log('Setup complete. You can now compile the code using "tsc"\nand start the server with "nodemon".');
