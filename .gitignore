@@ -1,6 +1,7 @@
 .env
-node_modules/
 .vscode
 build/
-backend/package-lock.json
-backend/package.json
+node_modules/
+build/
+package.json
+package-lock.json
