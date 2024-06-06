@@ -2,3 +2,5 @@
 node_modules/
 .vscode
 build/
+backend/package-lock.json
+backend/package.json
