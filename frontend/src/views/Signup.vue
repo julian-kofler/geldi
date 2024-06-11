@@ -1,8 +1,12 @@
 <template>
     <header>
       <img alt="Vue logo" class="logo" src="@/assets/geldi.svg" width="125" height="125" />
-      <h1 class="title">Ausgabeverwaltung</h1>
+      <h1 class="title">Registrieren</h1>
     </header>
+    <div class="form-group">
+        <label for="nickname">Nickname:</label>
+        <input type="text" id="nickname" v-model="nickname" required>
+    </div>
     <div class="form-group">
         <label for="email">Email:</label>
         <input type="text" id="email" v-model="email" required>
@@ -15,11 +19,11 @@
 
     <div class="button-container">
         <!-- <button class="login-button" type="submit" @click="login">Login</button> -->
-        <button class="login-button" type="submit" @click.prevent="login">Login</button>
+        <button class="login-button" type="submit" @click.prevent="login">Registrieren</button>
     </div>
     
     <div class="signup">
-        <router-link to="/signup">Noch keinen Account? Hier registrieren!</router-link>
+        <router-link to="/login">Schon einen Account? Hier einloggen!</router-link>
     </div>
 </template>
 
@@ -29,6 +33,7 @@ export default {
         return {
             email: '',
             password: '',
+            nickname: '',
         };
     },
     methods: {
@@ -36,7 +41,7 @@ export default {
             event.preventDefault(); // Prevent form submission
 
             try {
-                const response = await fetch("http://localhost:5000/api/auth/login", {
+                const response = await fetch("http://localhost:5000/api/auth/signup", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -44,6 +49,7 @@ export default {
                     body: JSON.stringify({
                         email: this.email,
                         password: this.password,
+                        nickname: this.nickname,
                     }),
                 });
 

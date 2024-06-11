@@ -17,19 +17,27 @@ const router = createRouter({
     {
       path: '/groups',
       name: 'Groups',
-      // Assuming you have a GroupsView component
       component: () => import('../views/Groups.vue')
-    }
+    },
+    {
+      path: '/signup',
+      name: 'Signup',
+      component: () => import('../views/Signup.vue')
+    },
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  // Replace `isLoggedIn` with your actual logic to check if the user is logged in
-  const isLoggedIn = false;
+  const isLoggedIn = localStorage.getItem('jwt') ? true : false;;
 
-  if (!isLoggedIn && to.path !== '/login') {
+  if (to.path === '/logout') {
+    localStorage.removeItem('jwt');
     next('/login');
-  } else if (isLoggedIn && to.path === '/login') {
+  }
+
+  if (!isLoggedIn && (to.path !== '/login' && to.path !== '/signup')) {
+    next('/login');
+  } else if (isLoggedIn && (to.path === '/login' || to.path === '/signup')) {
     next('/groups');
   } else {
     next();
