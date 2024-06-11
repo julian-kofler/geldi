@@ -3,32 +3,34 @@
       <img alt="Vue logo" class="logo" src="@/assets/geldi.svg" width="125" height="125" />
       <h1 class="title">Registrieren</h1>
     </header>
-    <div class="form-group">
-        <label for="nickname">Nickname:</label>
-        <input type="text" id="nickname" v-model="nickname" required>
-    </div>
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="text" id="email" v-model="email" required>
-    </div>
-
-    <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" v-model="password" required>
-    </div>
+    <TextInput name="Nickname" v-model="nickname" />
+    <TextInput name="Email" v-model="email" />
+    <TextInput name="Passwort" v-model="password" type="password"/>
 
     <div class="button-container">
-        <!-- <button class="login-button" type="submit" @click="login">Login</button> -->
-        <button class="login-button" type="submit" @click.prevent="login">Registrieren</button>
+        <PrimaryButton @click.prevent="signup">Registrieren</PrimaryButton>
     </div>
-    
     <div class="signup">
         <router-link to="/login">Schon einen Account? Hier einloggen!</router-link>
     </div>
 </template>
 
 <script>
+import PrimaryButton from '../components/PrimaryButton.vue'
+import TextInput from '../components/TextInput.vue'
+import { useRouter } from 'vue-router';
 export default {
+    components: {
+        PrimaryButton,
+        TextInput
+    },
+    setup() {
+      const router = useRouter();
+
+      return {
+        router,
+      };
+    },
     data() {
         return {
             email: '',
@@ -37,7 +39,7 @@ export default {
         };
     },
     methods: {
-        async login(event) {
+        async signup(event) {
             event.preventDefault(); // Prevent form submission
 
             try {
@@ -60,6 +62,8 @@ export default {
                 const data = await response.json();
                 localStorage.setItem('jwt', data.jwt);
                 localStorage.setItem('refreshToken', data.refreshToken);
+
+                this.router.push('/groups');
             } catch (error) {
                 console.error(error);
             }

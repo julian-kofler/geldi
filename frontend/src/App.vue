@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-// import NavigationBar from './components/NavigationBar.vue' // Import NavigationBar
 import '@/colors.css' // Import colors.css
 
 </script>
 <template>
-  <div class="app"> <!-- Add a root div with class "app" -->
+  <div class="app">
     <RouterView />
-    <!-- <navigationBar /> -->
   </div>
 </template>
 

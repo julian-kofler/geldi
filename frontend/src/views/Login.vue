@@ -3,28 +3,35 @@
       <img alt="Vue logo" class="logo" src="@/assets/geldi.svg" width="125" height="125" />
       <h1 class="title">Ausgabeverwaltung</h1>
     </header>
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="text" id="email" v-model="email" required>
-    </div>
 
-    <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" v-model="password" required>
-    </div>
+    <TextInput name="Email" v-model="email" />
+    <TextInput name="Passwort" v-model="password" type="password"/>
 
     <div class="button-container">
-        <!-- <button class="login-button" type="submit" @click="login">Login</button> -->
-        <button class="login-button" type="submit" @click.prevent="login">Login</button>
+        <PrimaryButton @click.prevent="login">Login</PrimaryButton>
     </div>
-    
     <div class="signup">
         <router-link to="/signup">Noch keinen Account? Hier registrieren!</router-link>
     </div>
 </template>
 
 <script>
+import PrimaryButton from '../components/PrimaryButton.vue'
+import TextInput from '../components/TextInput.vue'
+import { useRouter } from 'vue-router';
 export default {
+  name: 'Login',
+    components: {
+        PrimaryButton,
+        TextInput
+    },
+    setup() {
+      const router = useRouter();
+
+      return {
+        router,
+      };
+    },
     data() {
         return {
             email: '',
@@ -54,6 +61,8 @@ export default {
                 const data = await response.json();
                 localStorage.setItem('jwt', data.jwt);
                 localStorage.setItem('refreshToken', data.refreshToken);
+
+                this.router.push('/groups');
             } catch (error) {
                 console.error(error);
             }
