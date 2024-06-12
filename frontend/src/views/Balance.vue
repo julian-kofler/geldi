@@ -1,8 +1,8 @@
 <template>
-    <div>
-        <h1>Kontostand</h1>
-        <NavigationBar />
+    <div class="root">
+        <h1 class="title">Kontostand</h1>
     </div>
+    <NavigationBar />
 </template>
 
 <script>
@@ -14,3 +14,13 @@ export default {
     }
 };
 </script>
+<style scoped>
+.root{
+    padding: 2rem;
+}
+.title{
+    color: var(--color5);
+    text-align: center;
+    font-size: 2em;
+}
+</style>

@@ -1,7 +1,18 @@
 <template>
     <div class="root">
-        <h1>Guppen</h1>
-        <GroupsListItem v-for="group in groups" :key="group.id" :group="group" />
+        <h1 class="title">Gruppen</h1>
+        <router-link
+            v-for="group in groups"
+            :key="group.id"
+            :to="`/groups/${group.id}`"
+            tag="div"
+            class="group-link"
+        >
+            <GroupsListItem :group="group" />
+        </router-link>
+        <PrimaryButton class="floating-button" @click="handleClick">
+            Neue Gruppe
+        </PrimaryButton>
     </div>
     <NavigationBar />
 </template>
@@ -9,12 +20,13 @@
 <script>
 import NavigationBar from '../components/NavigationBar.vue'
 import GroupsListItem from '../components/GroupsListItem.vue'
-
+import PrimaryButton from '../components/PrimaryButton.vue'
 export default {
     name: 'GuppenScreen',
     components: {
         NavigationBar,
-        GroupsListItem
+        GroupsListItem,
+        PrimaryButton
     },
     data() {
         return {
@@ -72,5 +84,22 @@ export default {
 <style scoped>
 .root {
     padding: 2rem;
+}
+.title {
+  color: var(--color5);
+  text-align: center;
+  font-size: 2em;
+}
+.group-link {
+    text-decoration: none;
+    color: inherit;
+}
+.group-link:visited {
+    color: inherit;
+}
+.floating-button {
+    position: fixed;
+    right: 20px;
+    bottom: 70px;
 }
 </style>
