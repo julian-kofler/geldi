@@ -1,6 +1,7 @@
 .env
 .vscode
+build/
 node_modules/
 build/
-package.json
 package-lock.json
+frontend/src/assets/geldi.svg:Zone.Identifier

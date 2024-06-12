@@ -5,12 +5,15 @@ import appLogicRoutes from "./expenses/routes.js";
 import userRoutes from "./user/routes.js";
 import { HttpError } from "./middleware/types.js";
 import { Request, Response, NextFunction } from "express";
-
+import cors from "cors";
 
 // load .env file
 dotenv.config();
 
 const app = express();
+
+// Enable CORS
+app.use(cors());
 
 // Middleware for parsing JSON bodies
 app.use(express.json());
