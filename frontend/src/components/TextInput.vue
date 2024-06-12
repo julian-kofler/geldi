@@ -1,7 +1,9 @@
 <template>
   <div class="input-field">
     <label :for="name" class="input-label">{{ name }}</label>
-    <input :id="name" :name="name" :type="type" v-model="inputValue" class="input-text" />
+    <!-- <input :id="name" :name="name" :type="type" v-model="inputValue" class="input-text" /> -->
+    <input :id="name" :name="name" :type="type" :placeholder="hint" v-model="inputValue" class="input-text" />
+    <!-- <p class="input-hint">{{ hint }}</p> -->
   </div>
 </template>
 
@@ -18,6 +20,10 @@ export default {
       default: 'text'
     },
     modelValue: {
+      type: String,
+      default: ''
+    },
+    hint: {
       type: String,
       default: ''
     }
@@ -61,7 +67,11 @@ export default {
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
     outline: none;
   }
-  
+  .input-text::placeholder {
+  color: #888;
+  opacity: 0.5;
+}
+
   @media (max-width: 600px) {
     .input-text {
       font-size: 1.2em;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Settings</h1>
+    <h1>Einstellungen</h1>
 
     <PrimaryButton @click="logout">Logout</PrimaryButton>
     <NavigationBar />
@@ -19,6 +19,7 @@ export default {
   methods: {
     logout() {
         localStorage.removeItem('jwt');
+        localStorage.removeItem('refreshToken');
         this.$router.push('/login');
     }
   }

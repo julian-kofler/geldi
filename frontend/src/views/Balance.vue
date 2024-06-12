@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Balance</h1>
+        <h1>Kontostand</h1>
         <NavigationBar />
     </div>
 </template>
