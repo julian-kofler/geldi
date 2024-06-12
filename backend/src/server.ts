@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import authRoutes from "./authentication/routes.js";
 import expensesRoutes from "./expenses/routes.js";
 import appLogicRoutes from "./expenses/routes.js";
+import GroupRoutes from "./groups/routes.js";
 import cors from "cors";
 
 // load .env file
@@ -20,5 +21,6 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/app-logic", appLogicRoutes)
 app.use("/api/expenses", expensesRoutes);
+app.use("/api/groups", GroupRoutes);
 
 app.listen(process.env.BACKEND_PORT, () => console.log('Server running on port ' + process.env.BACKEND_PORT));
