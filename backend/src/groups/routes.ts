@@ -20,5 +20,12 @@ router.post("/getGroups", async (req: Request, res: Response) => {
     const response = await group.getGroups(userID);
     res.status(response.statusCode).json({ message: response.message, result: response.result });
 });
+router.post("/createGroup", async (req: Request, res: Response) => {
+    //todo: validate token
+
+    const { name, members } = req.body;
+    const response = await group.createGroup(name, members);
+    res.status(response.statusCode).json({ message: response.message});
+});
 
 export default router;
