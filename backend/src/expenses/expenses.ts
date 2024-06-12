@@ -39,4 +39,15 @@ export class ExpenseManagement {
         }
         return { statusCode: 200, message: "successful" };
     }
+    async getExpenses(groupId: number): Promise<{ statusCode: number, message: string, result: Expense[] }> {
+        try {
+            const sql = "SELECT * FROM expenses WHERE groupId = ?";
+            const values = [groupId];
+            const [expenses] = await this.db.execute<Expense[]>(sql, values);
+            return { statusCode: 200, message: "successful", result: expenses };
+        } catch (error) {
+            console.error(error);
+            return { statusCode: 500, message: "Internal server error", result: [] };
+        }
+    }
 }
