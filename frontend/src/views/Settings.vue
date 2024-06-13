@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <h1>Einstellungen</h1>
+  <div class="root">
+    <h1 class="title">Einstellungen</h1>
 
     <PrimaryButton @click="logout">Logout</PrimaryButton>
-    <NavigationBar />
   </div>
+  <NavigationBar />
 </template>
 
 <script>
@@ -27,5 +27,15 @@ export default {
 </script>
 
 <style scoped>
-/* Add your styles here */
+.root{
+  padding: 2rem;
+}
+.title {
+  color: var(--color5);
+  text-align: center;
+  font-size: 2em;
+}
+.primary-button {
+  width: 100%;
+}
 </style>

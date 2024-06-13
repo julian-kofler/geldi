@@ -1,7 +1,12 @@
 <template>
     <div class="root">
-        <h1>Guppen</h1>
-        <GroupsListItem v-for="group in groups" :key="group.id" :group="group" />
+        <h1 class="title">Gruppen</h1>
+        <router-link v-for="group in groups" :key="group.id" :to="`/groups/${group.id}`" tag="div" class="group-link">
+            <GroupsListItem :group="group" />
+        </router-link>
+        <PrimaryButton class="floating-button" @click="handleClick">
+            Neue Gruppe
+        </PrimaryButton>
     </div>
     <NavigationBar />
 </template>
@@ -9,62 +14,59 @@
 <script>
 import NavigationBar from '../components/NavigationBar.vue'
 import GroupsListItem from '../components/GroupsListItem.vue'
-
+import PrimaryButton from '../components/PrimaryButton.vue'
 export default {
     name: 'GuppenScreen',
     components: {
         NavigationBar,
-        GroupsListItem
+        GroupsListItem,
+        PrimaryButton
     },
     data() {
         return {
-            groups: [
-                { id: 1, name: 'Gutenberg WG' },
-                { id: 2, name: 'Pizza Abend' },
-                { id: 3, name: 'Sommerurlaub' },
-                { id: 4, name: 'Kino' },
-                { id: 5, name: 'Geburtstag' },
-                { id: 6, name: 'Weihnachtsfeier' },
-                { id: 7, name: 'Sport' },
-                { id: 8, name: 'Kochen' },
-                { id: 9, name: 'Garten' },
-                { id: 10, name: 'Buchclub' },
-                { id: 11, name: 'Gaming' },
-                { id: 12, name: 'Musik' },
-                { id: 13, name: 'Fotografie' },
-                { id: 14, name: 'Kunst' },
-                { id: 15, name: 'Reisen' },
-                { id: 16, name: 'Wandern' },
-                { id: 17, name: 'Radfahren' },
-                { id: 18, name: 'Schwimmen' },
-                { id: 19, name: 'Tanzen' },
-                { id: 20, name: 'Klettern' },
-                { id: 21, name: 'Yoga' },
-                { id: 22, name: 'Pilates' },
-                { id: 23, name: 'Fitness' },
-                { id: 24, name: 'Joggen' },
-                { id: 25, name: 'Laufen' },
-                { id: 26, name: 'Marathon' },
-                { id: 27, name: 'Triathlon' },
-                { id: 28, name: 'Schach' },
-                { id: 29, name: 'Poker' },
-                { id: 30, name: 'Brettspiele' },
-                { id: 31, name: 'Kartenspiele' },
-                { id: 32, name: 'Billard' },
-                { id: 33, name: 'Bowling' },
-                { id: 34, name: 'Darts' },
-                { id: 35, name: 'Tischtennis' },
-                { id: 36, name: 'Fußball' },
-                { id: 37, name: 'Handball' },
-                { id: 38, name: 'Basketball' },
-                { id: 39, name: 'Volleyball' },
-                { id: 40, name: 'Tennis' },
-                { id: 41, name: 'Badminton' },
-                { id: 42, name: 'Golf' },
-                { id: 43, name: 'Rugby' },
-                { id: 44, name: 'American Football' },
-            ]
+            groups: []
         }
+    },
+    methods: {
+        async refreshjwtToken() {
+            const response = await fetch('http://localhost:5000/api/auth/refreshJWT', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ refreshToken: localStorage.getItem('refreshToken') }),
+            });
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('jwt', data.jwt);
+                return true;
+            } else {
+                console.error('Failed to refresh token:', response.status, response.statusText);
+                return false;
+            }
+        },
+        async fetchGroups() {
+            let response = await fetch('http://localhost:5000/api/groups/', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                }
+            });
+            const data = await response.json();
+            if (response.ok) {
+                this.groups = data.result;
+            } else {
+                console.error('Failed to fetch groups:', response.status, response.statusText);
+                if (data.message == "Token expired") {
+                    const refreshed = await this.refreshjwtToken();
+                    if (refreshed) {
+                        await this.fetchGroups(); 
+                    }
+                }
+            }
+        },
+    },
+    async created() {
+        await this.fetchGroups();
     }
 };
 </script>
@@ -72,5 +74,26 @@ export default {
 <style scoped>
 .root {
     padding: 2rem;
+}
+
+.title {
+    color: var(--color5);
+    text-align: center;
+    font-size: 2em;
+}
+
+.group-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.group-link:visited {
+    color: inherit;
+}
+
+.floating-button {
+    position: fixed;
+    right: 20px;
+    bottom: 70px;
 }
 </style>

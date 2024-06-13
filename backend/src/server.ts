@@ -1,11 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import authRoutes from "./authentication/routes.js";
-import appLogicRoutes from "./expenses/routes.js";
+import GroupRoutes from "./groups/routes.js";
+import cors from "cors";
 import userRoutes from "./user/routes.js";
 import { HttpError } from "./middleware/types.js";
 import { Request, Response, NextFunction } from "express";
-import cors from "cors";
+
 
 // load .env file
 dotenv.config();
@@ -21,7 +22,9 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
-app.use("/api/app-logic", appLogicRoutes)
+// app.use("/api/app-logic", appLogicRoutes)
+// app.use("/api/expenses", expensesRoutes);
+app.use("/api/groups", GroupRoutes);
 
 // Middleware for error handling
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
