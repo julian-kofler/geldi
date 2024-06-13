@@ -6,7 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import zxcvbn from 'zxcvbn';
 
-import { User, } from '../authentication/types';
+import { User, } from '../user/types';
 import { Expense } from './types'
 import { json } from "stream/consumers";
 
