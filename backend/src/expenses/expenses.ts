@@ -19,7 +19,6 @@ export class ExpenseManagement {
 
     async createExpense(groupId: number, title: string, amount: string, date: string, payedBy: string, payedFor: string): Promise<{ statusCode: number, message: string }> {
         // TODO: Validate the data
-        // TODO: validate jwt
         if (!title || !amount || !date || !payedBy || !payedFor) {
             throw new Error('Missing required fields');
         }

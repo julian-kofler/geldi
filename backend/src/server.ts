@@ -1,8 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import authRoutes from "./authentication/routes.js";
-import expensesRoutes from "./expenses/routes.js";
-import appLogicRoutes from "./expenses/routes.js";
+// import expensesRoutes from "./expenses/routes.js";
+// import appLogicRoutes from "./expenses/routes.js";
 import GroupRoutes from "./groups/routes.js";
 import cors from "cors";
 import userRoutes from "./user/routes.js";
@@ -24,8 +24,8 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
-app.use("/api/app-logic", appLogicRoutes)
-app.use("/api/expenses", expensesRoutes);
+// app.use("/api/app-logic", appLogicRoutes)
+// app.use("/api/expenses", expensesRoutes);
 app.use("/api/groups", GroupRoutes);
 
 // Middleware for error handling
