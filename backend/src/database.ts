@@ -99,3 +99,5 @@ async function createTables(connection: mysql.Connection): Promise<void> {
         );
     `);
 }
+
+export const db = getConnection();

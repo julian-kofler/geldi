@@ -5,46 +5,35 @@ import crypto from "crypto";
 import nodemailer from "nodemailer";
 import cron from "node-cron";
 import CryptoES from "crypto-es";
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import zxcvbn from 'zxcvbn';
 
-import { SignUpResponse, jwtRefreshResponse, refreshTokenResponse, User, PasswordReset, ValidRefreshToken } from './types';
+import { SignUpResponse, jwtRefreshResponse, refreshTokenResponse, PasswordReset, ValidRefreshToken } from './types';
+import { InputValidation } from "./inputValidation.js";
+import { User } from "../user/types";
+import { UserRepository } from "../user/userRepository.js";
 
 export class Auth {
     private db: mysql.Connection;
-    private emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    private userRepo: UserRepository;
+    private inputVal: InputValidation;
     private resetTokenValidityTime: number = 30; // Token is valid for 30 minutes
     private resetTokenExpirationTime: Date = new Date();
     private refreshTokenValidityTime: number = 60 * 24 * 10; // Token is valid for 10 days
     private refreshTokenExpirationTime: Date = new Date();
     private jwtValidityTime: string = "5min";
-    private commonPasswordsURL: string = "https://lucidar.me/en/security/files/100000-most-common-passwords.json";
-    private commonPasswordsPath: string = "";
+
 
     public constructor(db: mysql.Connection){
         this.db = db;
-        try{
-            this.scheduleAutomaticTasks();
-            this.commonPasswordsPath = path.join(fileURLToPath(import.meta.url), '../../../data/' + this.commonPasswordsURL.split('/').pop()!);    
-            if(!fs.existsSync(this.commonPasswordsPath)){
-                this.fetchCommonPasswords();
-            }
-            if(!fs.existsSync(this.commonPasswordsPath)){
-                throw new Error("Common passwords file not found");
-            }
-        }
-        catch(error){
-            console.error((error as Error).message);
-        }
+        this.userRepo = new UserRepository(db);
+        this.inputVal = new InputValidation();
+
+        this.scheduleAutomaticTasks();
     }
 
     private scheduleAutomaticTasks(): void {
         cron.schedule('0 0 * * *', async () => {
             try {
-                this.passwordResetCleanup;
-                this.fetchCommonPasswords();
+                this.passwordResetCleanup();
             } catch (error) {
                 console.error((error as Error).message);
             }
@@ -54,102 +43,6 @@ export class Auth {
     private async passwordResetCleanup(): Promise<void> {
         const sql = "DELETE FROM password_resets WHERE expirationTime < NOW()";
         await this.db.execute(sql);
-    }
-
-    private async fetchCommonPasswords(): Promise<void> {
-        // Fetch the passwords from the API
-        const response = await fetch(this.commonPasswordsURL);
-        const commonPasswords = await response.json();
-
-        // Save the passwords to a file
-        fs.writeFileSync(this.commonPasswordsPath, JSON.stringify(commonPasswords));
-    }
-
-    private async isValidPassword(password: string): Promise<{valid:boolean, message:string}> {
-        let message: string = "";
-        let valid: boolean = true;
-
-        if(!password){
-            valid = false;
-            message = "password is required";
-        }
-        else{
-            const result = await this.isWeakPassword(password);
-            if(!result.valid){
-                valid = false;
-                message = result.message;
-            }
-        }
-        if(valid){
-            const result = await this.isInCustomList(password);
-            if(result){
-                valid = false;
-                message = "Password is too common";
-            }
-        }
-        
-        return {valid: valid, message: message};
-    }
-
-    private async isInCustomList(password: string): Promise<boolean> {
-        const commonPasswords = JSON.parse(fs.readFileSync(this.commonPasswordsPath, 'utf8'));
-        return commonPasswords.includes(password);
-    }
-
-    private async isWeakPassword(password: string): Promise<{valid: boolean, message: string}> {
-        const result = zxcvbn(password);
-        let message: string = "";
-
-        if(result.score < 4){
-            let feedback: string = result.feedback.suggestions.join(' ');
-            let warning: string = result.feedback.warning;
-            if (warning === "") warning = "Password is too weak";
-            if (feedback === "") feedback = "Please choose a stronger password";
-            message = warning + " | " + feedback;
-            return {valid: false, message: message};
-        }
-
-        return {valid: true, message: ""};
-    }
-
-    private async isValidEmail(email: string): Promise<{valid:boolean, message:string}> {
-        if(!email){
-            return { valid: false, message: "email is required" };
-        }
-        else if(!this.emailRegex.test(email)){
-            return { valid: false, message: "invalid email address" };
-        }
-        return { valid: true, message: "" };
-    }
-
-    private async getUserByEmail(email: string): Promise<User | null> {
-        try {
-            const sql = "SELECT * FROM users WHERE email = ?";
-            const [rows] = await this.db.query<User[]>(sql, [email]);
-            if (rows.length > 0) {
-                return rows[0];
-            } else {
-                return null;
-            }            
-        } catch (error) {
-            console.error((error as Error).message);
-            throw error;
-        }
-    }
-
-    private async getUserByID(id: number): Promise<User | null> {
-        try {
-            const sql = "SELECT * FROM users WHERE id = ?";
-            const [rows] = await this.db.query<User[]>(sql, [id]);
-            if (rows.length > 0) {
-                return rows[0];
-            } else {
-                return null;
-            }            
-        } catch (error) {
-            console.error((error as Error).message);
-            throw error;
-        }
     }
 
     private async getPasswordReset(hashedToken: string): Promise<PasswordReset | null> {
@@ -168,7 +61,7 @@ export class Auth {
     }
 
     private createJWT(userId: number): string {
-        return jwt.sign({ uID: userId }, process.env.JWT_SECRET!, { expiresIn: this.jwtValidityTime });
+        return jwt.sign({ userId: userId }, process.env.JWT_SECRET!, { expiresIn: this.jwtValidityTime });
     }
 
     private async createRefreshToken(userId: number): Promise<string> {
@@ -244,15 +137,7 @@ export class Auth {
         }
     }
 
-    public async verifyJWT(token: string): Promise<number | null> {
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { uID: number };
-            return decoded.uID;
-        } catch (error) {
-            console.error((error as Error).message);
-            return null;
-        }
-    }
+// public methods ---------------------------------------------------------------------
 
     public async refreshJWT(token: string): Promise<{ statusCode: number, result: jwtRefreshResponse }> {
         try {
@@ -293,8 +178,8 @@ export class Auth {
     }
 
     public async signUp(email: string, password: string, nickname: string): Promise<{ statusCode: number, result: SignUpResponse }> {
-        const emailCheck = await this.isValidEmail(email);
-        const passwordCheck = await this.isValidPassword(password);
+        const emailCheck = await this.inputVal.isValidEmail(email);
+        const passwordCheck = await this.inputVal.isValidPassword(password);
 
         if (!emailCheck.valid) {
             return { statusCode: 400, result: { message: emailCheck.message, jwt: "", refreshToken: "" } };
@@ -311,7 +196,7 @@ export class Auth {
             await this.db.execute<User[]>(sql, values);
             
             // get UserID, create JWT based on the ID
-            const user: User|null = await this.getUserByEmail(email);
+            const user: User|null = await this.userRepo.getUserByEmail(email);
             const token = this.createJWT(user!.id);
             const refreshToken = await this.createRefreshToken(user!.id);
             return {statusCode: 200, result: { message: "User signup successful", jwt: token, refreshToken: refreshToken}};
@@ -324,7 +209,7 @@ export class Auth {
 
     public async login(email: string, password: string): Promise<{ statusCode: number, result: SignUpResponse }> {
         try { 
-            const user: User|null = await this.getUserByEmail(email);
+            const user: User|null = await this.userRepo.getUserByEmail(email);
 
             if (!user) {
                 return { statusCode: 401, result: { message: "Incorrect credentials", jwt: "", refreshToken: "" } };
@@ -372,7 +257,7 @@ export class Auth {
 
     public async requestPasswordReset(email: string): Promise<{ statusCode: number, message: string }> {
         try {
-            const user = await this.getUserByEmail(email);
+            const user = await this.userRepo.getUserByEmail(email);
             if (!user) {
                 return { statusCode: 200, message: "If the account exists, the password reset email has been sent successfully" };
             } 
@@ -442,7 +327,7 @@ export class Auth {
             }
 
             // Check if the new password meets the requirements
-            const passwordCheck = await this.isValidPassword(newPassword);
+            const passwordCheck = await this.inputVal.isValidPassword(newPassword);
             if (!passwordCheck.valid) {
                 return { statusCode: 400, result: { message: passwordCheck.message, jwt: "", refreshToken: "" } };
             }
@@ -462,7 +347,7 @@ export class Auth {
                 [resetInfo.id]
             );
             
-            const user: User|null = await this.getUserByID(resetInfo.id);
+            const user: User|null = await this.userRepo.getUserByID(resetInfo.id);
             return await this.login(user!.email, newPassword);
         }
         catch(error){
@@ -473,7 +358,7 @@ export class Auth {
 
     public async passwordUpdate(email: string, oldPassword: string, newPassword: string): Promise<{ statusCode: number, message: string }> {
         try {
-            const user = await this.getUserByEmail(email);
+            const user = await this.userRepo.getUserByEmail(email);
             if (!user) {
                 return { statusCode: 401, message: "Unauthorized" };
             } 

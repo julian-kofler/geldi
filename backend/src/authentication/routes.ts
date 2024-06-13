@@ -7,7 +7,8 @@ const router = express.Router();
 const auth = new Auth(await getConnection());
 
 router.post("/signup", async (req: Request, res: Response) => {
-    const { email, password, nickname } = req.body;
+    // nickname is optional at this point
+    const { email, password, nickname = email } = req.body;
     const response = await auth.signUp(email, password, nickname);
     res.status(response.statusCode).json(response.result);
 });
