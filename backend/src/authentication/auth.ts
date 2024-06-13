@@ -10,6 +10,7 @@ import { SignUpResponse, jwtRefreshResponse, refreshTokenResponse, PasswordReset
 import { InputValidation } from "./inputValidation.js";
 import { User } from "../user/types";
 import { UserRepository } from "../user/userRepository.js";
+import { logger } from "../middleware/global.js";
 
 export class Auth {
     private db: mysql.Connection;
@@ -49,7 +50,7 @@ export class Auth {
             try {
                 this.passwordResetCleanup();
             } catch (error) {
-                console.error((error as Error).message);
+                logger.error((error as Error).message);
             }
         });
     }
@@ -69,7 +70,7 @@ export class Auth {
                 return null;
             }            
         } catch (error) {
-            console.error((error as Error).message);
+            logger.error((error as Error).message);
             throw error;
         }
     }
@@ -99,7 +100,7 @@ export class Auth {
             return refreshToken;
 
         } catch (error) {
-            console.error((error as Error).message);
+            logger.error((error as Error).message);
             throw error;
         }
     }
@@ -114,7 +115,7 @@ export class Auth {
                 return null;
             }            
         } catch (error) {
-            console.error((error as Error).message);
+            logger.error((error as Error).message);
             throw error;
         }
     }
@@ -146,7 +147,7 @@ export class Auth {
             await this.db.execute<User[]>(sql, [userId]);
             return { statusCode: 200, message: "Refresh token invalidated successfully" };
         } catch (error) {
-            console.error((error as Error).message);
+            logger.error((error as Error).message);
             return { statusCode: 500, message: "Error invalidating refresh token" };
         }
     }
@@ -167,7 +168,7 @@ export class Auth {
             const newToken = this.createJWT(userId);
             return { statusCode: 200, result: { message: "Token refreshed successfully", jwt: newToken} };
         } catch (error) {
-            console.error((error as Error).message);
+            logger.error((error as Error).message);
             return { statusCode: 500, result: { message: "Error refreshing token", jwt: ""} };
         }
     }
@@ -186,7 +187,7 @@ export class Auth {
             const newToken = await this.createRefreshToken(userId);
             return { statusCode: 200, result: { message: "Refresh token refreshed successfully", refreshToken: newToken } };
         } catch (error) {
-            console.error((error as Error).message);
+            logger.error((error as Error).message);
             return { statusCode: 500, result: { message: "Error refreshing refresh token", refreshToken: "" } };
         }
     }
@@ -216,7 +217,7 @@ export class Auth {
             return {statusCode: 200, result: { message: "User signup successful", jwt: token, refreshToken: refreshToken}};
         
         } catch (error) {
-        console.error((error as Error).message);
+        logger.error((error as Error).message);
         return { statusCode: 500, result: { message: "Error registering user", jwt: "", refreshToken: "" } };
         }
     }
@@ -248,7 +249,7 @@ export class Auth {
                 
             return {statusCode: 200, result: { message: "User login successful", jwt: token, refreshToken: refreshToken}};
         } catch (error) {
-            console.error((error as Error).message);
+            logger.error((error as Error).message);
             return { statusCode: 500, result: { message: "Error logging in user", jwt: "", refreshToken: "" } };
         }
     }
@@ -264,7 +265,7 @@ export class Auth {
             }
             return { statusCode: 401, message: "Unauthorized" };
         } catch (error) {
-            console.error((error as Error).message);
+            logger.error((error as Error).message);
             return { statusCode: 500, message: "Error logging out" };
         }
     }
@@ -306,7 +307,7 @@ export class Auth {
 
             return { statusCode: 200, message: "If the account exists, the password reset email has been sent successfully" };
         } catch (error) {
-            console.error((error as Error).message);
+            logger.error((error as Error).message);
             return { statusCode: 500, message: "Error sending password reset email" };
         }
     }
@@ -323,12 +324,9 @@ export class Auth {
 
             // Check if the token has expired
             const currentDateTime = new Date();
-            console.log(resetInfo.expirationTime);
             const expirationDateTime = new Date(resetInfo.expirationTime);
 
             if (currentDateTime > expirationDateTime) {
-                console.log(currentDateTime);
-                console.log(expirationDateTime)
                 throw new Error("Token has expired");
             }
 
@@ -357,7 +355,7 @@ export class Auth {
             return await this.login(user!.email, newPassword);
         }
         catch(error){
-            console.error((error as Error).message);
+            logger.error((error as Error).message);
             return { statusCode: 500, result: { message: "Error resetting password", jwt: "", refreshToken: "" } };
         }        
     }

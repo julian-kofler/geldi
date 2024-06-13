@@ -3,6 +3,7 @@ import mysql from "mysql2/promise";
 import {User} from './types'
 import {IfUserSettings} from './types'
 import { InputValidation } from "../authentication/inputValidation.js";
+import { logger } from "../middleware/global.js";
 
 export class UserSetgns{
     private db: mysql.Connection;
@@ -33,6 +34,7 @@ export class UserSetgns{
                 result: { message: 'Settings updated successfully' }
             };
         } catch (error) {
+            logger.error((error as Error).message);
             return {
                 statusCode: 500,
                 result: { message: 'An error occurred while updating settings' }
@@ -53,6 +55,7 @@ export class UserSetgns{
 
             return {statusCode: 200, result: settings};
         } catch (error) {
+            logger.error((error as Error).message);
             return {statusCode: 500, result: { message: 'An error occurred while fetching settings' }};
         }
     }

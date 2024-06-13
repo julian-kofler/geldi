@@ -15,7 +15,10 @@
       "crypto-es",
       "zxcvbn",
       "validator",
-      "express-rate-limit"
+      "express-rate-limit",
+      "helmet",
+      "morgan",
+      "winston"
     ],
     "devDependencies": [
       "@types/mysql",
@@ -26,6 +29,7 @@
       "@types/node-cron",
       "@types/nodemailer",
       "@types/zxcvbn",
-      "@types/validator"
+      "@types/validator",
+      "@types/morgan"
     ]
   }

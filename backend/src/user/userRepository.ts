@@ -1,6 +1,7 @@
 import mysql from "mysql2/promise";
 
 import { User } from "./types";
+import { logger } from "../middleware/global.js";
 
 export class UserRepository{
     private db: mysql.Connection;
@@ -19,7 +20,7 @@ export class UserRepository{
                 return null;
             }            
         } catch (error) {
-            console.error((error as Error).message);
+            logger.error((error as Error).message);
             throw error;
         }
     }
@@ -34,7 +35,7 @@ export class UserRepository{
                 return null;
             }            
         } catch (error) {
-            console.error((error as Error).message);
+            logger.error((error as Error).message);
             throw error;
         }
     }
