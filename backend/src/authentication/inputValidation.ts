@@ -3,9 +3,9 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import zxcvbn from 'zxcvbn';
+import validator from 'validator';
 
 export class InputValidation{
-    private emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     private commonPasswordsURL: string = "https://lucidar.me/en/security/files/100000-most-common-passwords.json";
     private commonPasswordsPath: string = "";
 
@@ -64,7 +64,7 @@ export class InputValidation{
         if(!email){
             return { valid: false, message: "email is required" };
         }
-        else if(!this.emailRegex.test(email)){
+        else if(!validator.isEmail(email)){
             return { valid: false, message: "invalid email address" };
         }
         return { valid: true, message: "" };

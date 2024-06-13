@@ -20,12 +20,26 @@ export class Auth {
     private refreshTokenValidityTime: number = 60 * 24 * 10; // Token is valid for 10 days
     private refreshTokenExpirationTime: Date = new Date();
     private jwtValidityTime: string = "5min";
+    private transporter: nodemailer.Transporter;
+    private pwResetURL: string = "http://..."
 
 
     public constructor(db: mysql.Connection){
         this.db = db;
         this.userRepo = new UserRepository(db);
         this.inputVal = new InputValidation();
+        this.transporter = nodemailer.createTransport({
+            host: process.env.EMAIL_HOST,
+            port: process.env.EMAIL_PORT ? parseInt(process.env.EMAIL_PORT) : 587,
+            secure: true,
+            auth: {
+                user: process.env.EMAIL_USERNAME,
+                pass: process.env.EMAIL_PASSWORD
+            },
+            tls: {
+                rejectUnauthorized: false
+            }
+        });
 
         this.scheduleAutomaticTasks();
     }
@@ -47,7 +61,7 @@ export class Auth {
 
     private async getPasswordReset(hashedToken: string): Promise<PasswordReset | null> {
         try {
-            const sql = "SELECT token, userId expirationTime FROM password_resets WHERE token = ?";
+            const sql = "SELECT token, userId, expirationTime FROM password_resets WHERE token = ?";
             const [rows] = await this.db.query<PasswordReset[]>(sql, [hashedToken]);
             if (rows.length > 0) {
                 return rows[0];
@@ -274,35 +288,21 @@ export class Auth {
 
             const sql = "INSERT INTO password_resets (token, userId, expirationTime) VALUES (?, ?, ?)";
             const values = [hashedToken, user.id, this.resetTokenExpirationTime];
-            await this.db.execute<User[]>(sql, values);
+            await this.db.execute(sql, values);
 
-            // Send an email to the user with a link to reset their password
-            const transporter = nodemailer.createTransport({
-                host: process.env.EMAIL_HOST,
-                port: process.env.EMAIL_PORT ? parseInt(process.env.EMAIL_PORT) : 587,
-                secure: true,
-                auth: {
-                    user: process.env.EMAIL_USERNAME,
-                    pass: process.env.EMAIL_PASSWORD
-                },
-                tls: {
-                    rejectUnauthorized: false
-                }
-            });
-
-            const resetUrl = `http://localhost:3000/reset/${token}`;
+            const resetUrl = `${this.pwResetURL}/token?${token}`;
 
             const mailOptions = {
                 from: process.env.EMAIL_USERNAME,
                 to: email,
-                subject: 'Ausgabenverwaltung: Passwort zurücksetzen',
+                subject: 'Geldi: Passwort zurücksetzen',
                 text: `Sie erhalten diese E-Mail, weil Sie (oder jemand anderes) eine Zurücksetzung des Passworts für Ihr Konto angefordert haben.\n\n` +
                     `Bitte klicken Sie auf den folgenden Link oder fügen Sie ihn in Ihren Browser ein, um den Vorgang innerhalb von ${this.resetTokenValidityTime} Minuten abzuschließen:\n\n` +
                     `${resetUrl}\n\n` +
                     `Wenn Sie dies nicht angefordert haben, ignorieren Sie diese E-Mail und Ihr Passwort bleibt unverändert.\n\n`
             };
 
-            await transporter.sendMail(mailOptions);
+            await this.transporter.sendMail(mailOptions);
 
             return { statusCode: 200, message: "If the account exists, the password reset email has been sent successfully" };
         } catch (error) {
@@ -322,7 +322,13 @@ export class Auth {
             }
 
             // Check if the token has expired
-            if (new Date() > resetInfo.expirationTime) {
+            const currentDateTime = new Date();
+            console.log(resetInfo.expirationTime);
+            const expirationDateTime = new Date(resetInfo.expirationTime);
+
+            if (currentDateTime > expirationDateTime) {
+                console.log(currentDateTime);
+                console.log(expirationDateTime)
                 throw new Error("Token has expired");
             }
 
@@ -338,56 +344,21 @@ export class Auth {
             // Update the user's password in the database
             await this.db.execute(
                 "UPDATE users SET password = ? WHERE id = ?",
-                [hashedPassword, resetInfo.id]
+                [hashedPassword, resetInfo.userId]
             );
 
             // Delete the password reset request from the database
             await this.db.execute(
-                "DELETE FROM password_resets WHERE id = ?",
-                [resetInfo.id]
+                "DELETE FROM password_resets WHERE userId = ?",
+                [resetInfo.userId]
             );
             
-            const user: User|null = await this.userRepo.getUserByID(resetInfo.id);
+            const user: User|null = await this.userRepo.getUserByID(resetInfo.userId);
             return await this.login(user!.email, newPassword);
         }
         catch(error){
             console.error((error as Error).message);
             return { statusCode: 500, result: { message: "Error resetting password", jwt: "", refreshToken: "" } };
         }        
-    }
-
-    public async passwordUpdate(email: string, oldPassword: string, newPassword: string): Promise<{ statusCode: number, message: string }> {
-        try {
-            const user = await this.userRepo.getUserByEmail(email);
-            if (!user) {
-                return { statusCode: 401, message: "Unauthorized" };
-            } 
-
-            const match = await new Promise<boolean>((resolve, reject) => {
-                bcrypt.compare(oldPassword, user.password, (err, result) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(result);
-                    }
-                });
-            });
-    
-            if (!match) {
-                return { statusCode: 401, message: "Unauthorized" };
-            }
-    
-            const hash = await bcrypt.hash(newPassword, 10);
-        
-            await this.db.execute(
-                "UPDATE users SET password = ? WHERE email = ?",
-                [hash, email]
-            );
-    
-            return { statusCode: 200, message: "Password updated successfully" };
-        } catch (error) {
-            console.error((error as Error).message);
-            return { statusCode: 500, message: "Error updating password" };
-        }
     }
 }

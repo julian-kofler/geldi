@@ -5,6 +5,7 @@ import appLogicRoutes from "./expenses/routes.js";
 import userRoutes from "./user/routes.js";
 import { HttpError } from "./middleware/types.js";
 import { Request, Response, NextFunction } from "express";
+import rateLimit from "express-rate-limit";
 
 
 // load .env file
@@ -15,8 +16,23 @@ const app = express();
 // Middleware for parsing JSON bodies
 app.use(express.json());
 
+// Rate limiter
+const globLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 150, // limit each IP to 150 requests per windowMs
+    message: 'Too many requests, please try again later.'
+});
+app.use(globLimiter);
+
+// More strict rate limiter for auth routes
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 15, // limit each IP to 15 requests per windowMs
+    message: 'Too many requests, please try again later.'
+});
+
 // Routes
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoutes, authLimiter);
 app.use("/api/user", userRoutes);
 app.use("/api/app-logic", appLogicRoutes)
 

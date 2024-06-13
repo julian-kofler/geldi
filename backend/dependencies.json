@@ -13,7 +13,9 @@
       "typescript",
       "node-cron",
       "crypto-es",
-      "zxcvbn"
+      "zxcvbn",
+      "validator",
+      "express-rate-limit"
     ],
     "devDependencies": [
       "@types/mysql",
@@ -23,6 +25,7 @@
       "@types/express",
       "@types/node-cron",
       "@types/nodemailer",
-      "@types/zxcvbn"
+      "@types/zxcvbn",
+      "@types/validator"
     ]
   }
