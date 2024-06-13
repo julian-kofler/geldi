@@ -2,17 +2,18 @@
   <div class="padding">
     <header>
       <img alt="Vue logo" class="logo" src="@/assets/geldi.svg" width="125" height="125" />
-      <h1 class="title">Ausgabeverwaltung</h1>
+      <h1 class="title">Registrieren</h1>
     </header>
 
+    <TextInput name="Nickname" v-model="nickname" hint="Max" />
     <TextInput name="Email" v-model="email" hint="max.mustermann@abc.de" />
     <TextInput name="Passwort" v-model="password" type="password" hint="Nutze ein Passwort nie zweimal!" />
 
     <div class="button-container">
-      <PrimaryButton @click.prevent="login">Login</PrimaryButton>
+      <PrimaryButton @click.prevent="signup">Registrieren</PrimaryButton>
     </div>
     <div class="signup">
-      <router-link to="/signup">Noch keinen Account? Hier registrieren!</router-link>
+      <router-link to="/login">Schon einen Account? Hier einloggen!</router-link>
     </div>
   </div>
 </template>
@@ -22,7 +23,6 @@ import PrimaryButton from '../components/PrimaryButton.vue'
 import TextInput from '../components/TextInput.vue'
 import { useRouter } from 'vue-router';
 export default {
-  name: 'Login',
   components: {
     PrimaryButton,
     TextInput
@@ -38,14 +38,15 @@ export default {
     return {
       email: '',
       password: '',
+      nickname: '',
     };
   },
   methods: {
-    async login(event) {
+    async signup(event) {
       event.preventDefault(); // Prevent form submission
 
       try {
-        const response = await fetch("http://localhost:5000/api/auth/login", {
+        const response = await fetch("http://localhost:5000/api/auth/signup", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -53,6 +54,7 @@ export default {
           body: JSON.stringify({
             email: this.email,
             password: this.password,
+            nickname: this.nickname,
           }),
         });
 

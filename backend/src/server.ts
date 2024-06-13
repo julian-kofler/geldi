@@ -6,7 +6,8 @@ import helmet from "helmet";
 import morgan from 'morgan';
 
 import authRoutes from "./authentication/routes.js";
-import appLogicRoutes from "./expenses/routes.js";
+import GroupRoutes from "./groups/routes.js";
+import cors from "cors";
 import userRoutes from "./user/routes.js";
 import { HttpError } from "./middleware/types.js";
 import { logger } from './middleware/global.js';
@@ -15,6 +16,9 @@ import { logger } from './middleware/global.js';
 dotenv.config();
 
 const app = express();
+
+// Enable CORS
+app.use(cors());
 
 // Middleware for logging HTTP requests
 app.use(morgan('combined', { stream: { write: (message: string) => logger.info(message.trim()) } }));
@@ -37,7 +41,9 @@ const authLimiter = rateLimit({
 // Routes
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/user", userRoutes);
-app.use("/api/app-logic", appLogicRoutes)
+// app.use("/api/app-logic", appLogicRoutes)
+// app.use("/api/expenses", expensesRoutes);
+app.use("/api/groups", GroupRoutes);
 
 // Global rate limiter
 const globLimiter = rateLimit({

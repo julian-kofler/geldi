@@ -18,7 +18,8 @@
       "express-rate-limit",
       "helmet",
       "morgan",
-      "winston"
+      "winston",
+      "cors"
     ],
     "devDependencies": [
       "@types/mysql",
@@ -30,6 +31,7 @@
       "@types/nodemailer",
       "@types/zxcvbn",
       "@types/validator",
-      "@types/morgan"
+      "@types/morgan",
+      "@types/cors"
     ]
   }
