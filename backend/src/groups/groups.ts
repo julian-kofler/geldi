@@ -19,8 +19,6 @@ export class GroupManagement {
     }
     async getGroups(userID: number): Promise<{ statusCode: number, message: string, result: Group[] }> {
         try {
-            console.log("userID: ", userID);
-
             const sqlQuery = "SELECT id, name, completed FROM  \`groups\` as g inner join members_in_groups as mg on g.id = mg.groupID where userID = ?";            
             const values = [userID];
             const [groups] = await this.db.execute<Group[]>(sqlQuery, values);
@@ -31,8 +29,6 @@ export class GroupManagement {
         }
     }
     async createGroup(name: string, members: number[]): Promise<{ statusCode: number, message: string}> {
-        console.log("name: ", name);
-        console.log("members: ", members);
         try {
             const sqlQuery = "INSERT INTO \`groups\` (name, completed) VALUES (?, ?)";
             const values = [name, 0];

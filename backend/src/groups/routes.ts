@@ -18,7 +18,6 @@ router.get("/", loginRequired, async (req: RequestWithUser, res: Response) => {
     let userID = -1;
     if (userIsDefined(req)) {
         userID = req.user.id;
-        console.log("userID: ", userID);
     }
     if (userID === -1) {
         res.status(401).json({ message: "No or invalid token provided" });
@@ -32,7 +31,6 @@ router.post("/", loginRequired, async (req: RequestWithUser, res: Response) => {
     let userID = -1;
     if (userIsDefined(req)) {
         userID = req.user.id;
-        console.log("userID: ", userID);
     }
     if (userID === -1) {
         res.status(401).json({ message: "No or invalid token provided" });
@@ -47,13 +45,11 @@ router.get("/:groupID/expenses", loginRequired, async (req: RequestWithUser, res
     let userID = -1;
     if (userIsDefined(req)) {
         userID = req.user.id;
-        console.log("userID: ", userID);
     }
     if (userID === -1) {
         res.status(401).json({ message: "No or invalid token provided" });
         return;
     }
-
     const groupID = req.params.groupID;
     const response = await expense.getExpenses(parseInt(groupID));
     res.status(response.statusCode).json({ message: response.message, result: response.result });
@@ -62,7 +58,6 @@ router.post("/:groupID/expenses", loginRequired, async (req: RequestWithUser, re
     let userID = -1;
     if (userIsDefined(req)) {
         userID = req.user.id;
-        console.log("userID: ", userID);
     }
     if (userID === -1) {
         res.status(401).json({ message: "No or invalid token provided" });
@@ -70,12 +65,6 @@ router.post("/:groupID/expenses", loginRequired, async (req: RequestWithUser, re
     }
 
     const { groupId, title, amount, date, payedBy, payedFor } = req.body;
-    console.log("groupId: ", groupId);
-    console.log("title: ", title);
-    console.log("amount: ", amount);
-    console.log("date: ", date);
-    console.log("payedBy: ", payedBy);
-    console.log("payedFor: ", payedFor);
     const response = await expense.createExpense(groupId, title, amount, date, payedBy, payedFor);
     res.status(response.statusCode).json(response.message);
 });
