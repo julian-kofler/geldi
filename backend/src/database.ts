@@ -50,7 +50,7 @@ async function createTables(connection: mysql.Connection): Promise<void> {
 
     await connection.query(`
         CREATE TABLE IF NOT EXISTS \`groups\`(
-            id INT PRIMARY KEY NOT NULL,
+            id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
             completed BOOLEAN
         );

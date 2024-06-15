@@ -17,8 +17,8 @@ export interface refreshTokenResponse {
 }
 
 export interface PasswordReset extends mysql.RowDataPacket{
-    id: number;
     token: string;
+    userId: number;
     expirationTime: Date;
 }
 

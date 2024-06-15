@@ -14,6 +14,11 @@
       "node-cron",
       "crypto-es",
       "zxcvbn",
+      "validator",
+      "express-rate-limit",
+      "helmet",
+      "morgan",
+      "winston",
       "cors"
     ],
     "devDependencies": [
@@ -25,6 +30,8 @@
       "@types/node-cron",
       "@types/nodemailer",
       "@types/zxcvbn",
+      "@types/validator",
+      "@types/morgan",
       "@types/cors"
     ]
   }

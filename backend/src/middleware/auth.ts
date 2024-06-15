@@ -6,6 +6,7 @@ import { RequestWithUser } from "./types.js";
 import { UserRepository } from "../user/userRepository.js";
 import { db } from "../database.js";
 import { HttpError } from "./types.js";
+import { logger } from "./global.js";
 
 const userRepo = new UserRepository(await db);
 
@@ -14,7 +15,7 @@ export const loginRequired = async (req: RequestWithUser, res: Response, next: N
     const secret = process.env.JWT_SECRET;
 
     if (!secret) {
-        console.error('JWT_SECRET is not set');
+        logger.error('JWT_SECRET is not set');
         return res.sendStatus(500);
     }
 
@@ -28,7 +29,7 @@ export const loginRequired = async (req: RequestWithUser, res: Response, next: N
                 } else if (err instanceof jwt.NotBeforeError) {
                     throw new HttpError('Token not active', 401);
                 } else {
-                    console.log("Error: " + err);
+                    logger.error(err);
                     return next(new HttpError('Invalid token', 401));
                 }
             }
