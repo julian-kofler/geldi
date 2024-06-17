@@ -24,5 +24,11 @@ router.get("/getSettings", loginRequired, async (req: RequestWithUser, res: Resp
         res.status(response.statusCode).json(response.result);
     }
 });
+router.get("/nickname/:userid", loginRequired, async (req: RequestWithUser, res: Response) => {
+    if (userIsDefined(req)) {
+        const response = await userSetgns.getSettings(parseInt(req.params.userid));
+        res.status(response.statusCode).json(response.result.nickname);
+    }
+});
 
 export default router;
