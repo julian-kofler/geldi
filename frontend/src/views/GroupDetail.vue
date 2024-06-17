@@ -2,17 +2,24 @@
     <div class="container">
         <GroupDetailHeader :group="group" />
         <div class="root" :style="{ 'margin-top': `${headerHeight}px` }"></div>
+
         <div class="root">
-            <router-link v-for="(expense, index) in groupExpenses" :key="index"
-                :to="`/groups/${group.id}/expenses/${expense.id}`" class="group-link">
-                <GroupExpenseItem :title="expense.title" :amount="expense.amount" :date="expense.date"
-                    :paidby="expense.paidby" />
+            <router-link 
+                v-for="(expense, index) in groupExpenses" 
+                :key="index"
+                :to="`/groups/${group.id}/expenses/${expense.id}`" 
+                class="group-link">
+                <GroupExpenseItem 
+                    :title="expense.title" 
+                    :amount="expense.amount" 
+                    :date="expense.timestamp.split('T')[0]" 
+                    :paidby="expense.payedBy" 
+                    />
             </router-link>
         </div>
-        <PrimaryButton class="floating-button" @click="handleClick">Neue Ausgabe</PrimaryButton>
-        <div v-if="showCreateExpenseModal" class="modal">
-            <CreateExpense @close="handleClick" />
-        </div>
+
+        <PrimaryButton class="floating-button" @click="newExpense">Neue Ausgabe</PrimaryButton>
+
         <GroupDetailBottom />
         <div class="root" :style="{ 'margin-bottom': `${bottomBarHeight}px` }"></div>
     </div>
@@ -23,7 +30,6 @@ import GroupDetailHeader from '../components/GroupDetailHeader.vue'
 import GroupDetailBottom from '../components/GroupDetailBottom.vue'
 import GroupExpenseItem from '../components/GroupExpenseItem.vue'
 import PrimaryButton from '../components/PrimaryButton.vue'
-import CreateExpense from '../components/createExpense.vue'
 
 export default {
     name: 'GroupDetail',
@@ -32,7 +38,6 @@ export default {
         GroupDetailBottom,
         GroupExpenseItem,
         PrimaryButton,
-        CreateExpense
     },
     data() {
         return {
@@ -44,8 +49,9 @@ export default {
         }
     },
     methods: {
-        handleClick() {
-            this.showCreateExpenseModal = !this.showCreateExpenseModal;
+        newExpense() {
+            const url = `/groups/${this.$route.params.groupId}/new-expense`;
+            this.$router.push(url);
         },
         async refreshjwtToken() {
             const response = await fetch('http://localhost:5000/api/auth/refreshJWT', {
@@ -111,26 +117,10 @@ export default {
         await this.fetchExpenses();
         await this.fetchGroupName();
     },
-    mounted() {
-        // this.headerHeight = this.$refs.header.$el.offsetHeight;
-        // this.bottomBarHeight = this.$refs.bottom.$el.offsetHeight;
-    },
 }
 </script>
 
 <style scoped>
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .root {
     box-sizing: border-box;
     padding: 2rem;

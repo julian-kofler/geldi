@@ -2,11 +2,11 @@
   <div class="expense-item">
     <div class="left-section">
       <div class="title">{{ title }}</div>
-      <div class="paidby">{{ paidby }}</div>
+      <div class="paidby">Bezahlt von:{{ paidby }}</div>
     </div>
     <div class="right-section">
       <div class="amount">{{ amount }}€</div>
-      <div class="date">{{ date }}</div>
+      <div class="date"> {{ date }}</div>
     </div>
   </div>
 </template>
@@ -31,7 +31,7 @@ export default {
       type: String,
       required: true
     }
-  }
+  },
 }
 </script>
 

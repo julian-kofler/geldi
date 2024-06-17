@@ -29,6 +29,16 @@ const router = createRouter({
       name: 'GroupManage',
       component: () => import('../views/GroupManage.vue')
     },
+    {
+      path: '/groups/:groupId/new-expense',
+      name: 'newExpense',
+      component: () => import('../views/createExpense.vue')
+    },
+    {
+      path: '/new-group',
+      name: 'newGroup',
+      component: () => import('../views/newGroup.vue')
+    },
     // {
     //   path: '/groups/:groupId/expenses/:expenseId',
     //   name: 'Expense',
