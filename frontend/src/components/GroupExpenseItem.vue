@@ -6,33 +6,33 @@
     </div>
     <div class="right-section">
       <div class="amount">{{ amount }}€</div>
-      <div class="date"> {{ date }}</div>
+      <div class="date">{{ date }}</div>
     </div>
   </div>
 </template>
 
 <script>
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 export default {
   props: {
     title: {
       type: String,
-      required: true
+      required: true,
     },
     amount: {
       type: String,
-      required: true
+      required: true,
     },
     date: {
       type: String,
-      required: true
+      required: true,
     },
     paidby: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
-}
+};
 </script>
 
 <style scoped>
@@ -49,17 +49,20 @@ export default {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
 }
-.left-section, .right-section {
+.left-section,
+.right-section {
   display: flex;
   flex-direction: column;
 }
 
-.title, .amount {
+.title,
+.amount {
   font-size: 18px;
   font-weight: bold;
 }
 
-.paidby, .date {
+.paidby,
+.date {
   font-size: 14px;
   color: #888;
 }

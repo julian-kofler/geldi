@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import '../colors.css' // Import colors.css
+import "../colors.css"; // Import colors.css
 export default {
-  name: 'NavigationBar',
-}
+  name: "NavigationBar",
+};
 </script>
 
 <style scoped>

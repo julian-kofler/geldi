@@ -6,7 +6,7 @@ export interface IfUserSettings {
   password: string;
 }
 
-export interface User extends mysql.RowDataPacket{
+export interface User extends mysql.RowDataPacket {
   id: number;
   email: string;
   password: string;

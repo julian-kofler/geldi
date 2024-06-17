@@ -1,31 +1,44 @@
 <template>
   <div class="padding">
     <header>
-      <img alt="Vue logo" class="logo" src="@/assets/geldi.svg" width="125" height="125" />
+      <img
+        alt="Vue logo"
+        class="logo"
+        src="@/assets/geldi.svg"
+        width="125"
+        height="125"
+      />
       <h1 class="title">Ausgabeverwaltung</h1>
     </header>
 
     <TextInput name="Email" v-model="email" hint="max.mustermann@abc.de" />
-    <TextInput name="Passwort" v-model="password" type="password" hint="Nutze ein Passwort nie zweimal!" />
+    <TextInput
+      name="Passwort"
+      v-model="password"
+      type="password"
+      hint="Nutze ein Passwort nie zweimal!"
+    />
 
     <div class="button-container">
       <PrimaryButton @click.prevent="login">Login</PrimaryButton>
     </div>
     <div class="signup">
-      <router-link to="/signup">Noch keinen Account? Hier registrieren!</router-link>
+      <router-link to="/signup"
+        >Noch keinen Account? Hier registrieren!</router-link
+      >
     </div>
   </div>
 </template>
 
 <script>
-import PrimaryButton from '../components/PrimaryButton.vue'
-import TextInput from '../components/TextInput.vue'
-import { useRouter } from 'vue-router';
+import PrimaryButton from "../components/PrimaryButton.vue";
+import TextInput from "../components/TextInput.vue";
+import { useRouter } from "vue-router";
 export default {
-  name: 'Login',
+  name: "Login",
   components: {
     PrimaryButton,
-    TextInput
+    TextInput,
   },
   setup() {
     const router = useRouter();
@@ -36,8 +49,8 @@ export default {
   },
   data() {
     return {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     };
   },
   methods: {
@@ -46,9 +59,9 @@ export default {
 
       try {
         const response = await fetch("http://localhost:5000/api/auth/login", {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             email: this.email,
@@ -61,10 +74,10 @@ export default {
         }
 
         const data = await response.json();
-        localStorage.setItem('jwt', data.jwt);
-        localStorage.setItem('refreshToken', data.refreshToken);
+        localStorage.setItem("jwt", data.jwt);
+        localStorage.setItem("refreshToken", data.refreshToken);
 
-        this.router.push('/groups');
+        this.router.push("/groups");
       } catch (error) {
         console.error(error);
       }

@@ -2,17 +2,17 @@
   <div class="root">
     <h1 class="title">Neue Ausgabe</h1>
     <TextInput v-model="title" name="Titel" />
-    <TextInput v-model="amount" name="Preis" type="number" hint="€€.cc"/>
-    <TextInput v-model="date" name="Datum" type="date"/>
+    <TextInput v-model="amount" name="Preis" type="number" hint="€€.cc" />
+    <TextInput v-model="date" name="Datum" type="date" />
     <secondaryButton @click="abbrechen">Abbrechen</secondaryButton>
     <PrimaryButton @click="speichern">Speichern</PrimaryButton>
   </div>
 </template>
 
 <script>
-import TextInput from '../components/TextInput.vue';
-import PrimaryButton from '../components/PrimaryButton.vue';
-import SecondaryButton from '../components/SecondaryButton.vue';
+import TextInput from "../components/TextInput.vue";
+import PrimaryButton from "../components/PrimaryButton.vue";
+import SecondaryButton from "../components/SecondaryButton.vue";
 
 export default {
   components: {
@@ -22,51 +22,67 @@ export default {
   },
   data() {
     return {
-      title: '',
-      amount: '',
+      title: "",
+      amount: "",
       date: new Date().toISOString(),
     };
   },
   methods: {
     async refreshjwtToken() {
-      const response = await fetch('http://localhost:5000/api/auth/refreshJWT', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ refreshToken: localStorage.getItem('refreshToken') }),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/auth/refreshJWT",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            refreshToken: localStorage.getItem("refreshToken"),
+          }),
+        }
+      );
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('jwt', data.jwt);
+        localStorage.setItem("jwt", data.jwt);
         return true;
       } else {
-        console.error('Failed to refresh token:', response.status, response.statusText);
+        console.error(
+          "Failed to refresh token:",
+          response.status,
+          response.statusText
+        );
         return false;
       }
     },
     async speichern() {
       let groupId = this.$route.params.groupId;
-      let response = await fetch(`http://localhost:5000/api/groups/${groupId}/expenses`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          groupId: groupId,
-          title: this.title,
-          amount: this.amount,
-          date: this.date,
-          payedBy: '1',
-          payedFor: ["1","2","3","4"],
-        })
-      });
+      let response = await fetch(
+        `http://localhost:5000/api/groups/${groupId}/expenses`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            groupId: groupId,
+            title: this.title,
+            amount: this.amount,
+            date: this.date,
+            payedBy: "1",
+            payedFor: ["1", "2", "3", "4"],
+          }),
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         this.$router.push(`/groups/${groupId}`);
       } else {
-        console.error('Failed to fetch groups:', response.status, response.statusText);
+        console.error(
+          "Failed to fetch groups:",
+          response.status,
+          response.statusText
+        );
         if (data.message == "Token expired") {
           const refreshed = await this.refreshjwtToken();
           if (refreshed) {

@@ -1,8 +1,8 @@
 <template>
-    <div class="root">
-        <h1>Manage Group</h1>
-        <p>Group ID: {{ $route.params.groupId }}</p>
-    </div>
+  <div class="root">
+    <h1>Manage Group</h1>
+    <p>Group ID: {{ $route.params.groupId }}</p>
+  </div>
 </template>
 
 <script>
@@ -11,6 +11,6 @@
 
 <style scoped>
 .root {
-    padding: 2rem;
+  padding: 2rem;
 }
 </style>

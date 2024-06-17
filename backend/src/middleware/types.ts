@@ -1,4 +1,4 @@
-import { Request} from "express";
+import { Request } from "express";
 import { User } from "../user/types";
 
 // Define a new interface that extends the existing Request interface
@@ -10,7 +10,7 @@ export class HttpError extends Error {
   statusCode: number;
 
   constructor(message: string, statusCode: number) {
-      super(message);
-      this.statusCode = statusCode;
+    super(message);
+    this.statusCode = statusCode;
   }
 }

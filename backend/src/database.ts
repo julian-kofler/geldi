@@ -1,4 +1,4 @@
-import mysql from 'mysql2/promise';
+import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -6,22 +6,22 @@ dotenv.config();
 let connection: mysql.Connection | null = null;
 
 export async function getConnection(): Promise<mysql.Connection> {
-    if (!connection) {
-        connection = await mysql.createConnection({
-            host: process.env.DB_HOST,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASS,
-            database: process.env.DB_NAME,
-            port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,
-            rowsAsArray: false,
-        });
-        await createTables(connection);
-    }
-    return connection;
+  if (!connection) {
+    connection = await mysql.createConnection({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
+      port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,
+      rowsAsArray: false,
+    });
+    await createTables(connection);
+  }
+  return connection;
 }
 
 async function createTables(connection: mysql.Connection): Promise<void> {
-    await connection.query(`
+  await connection.query(`
         CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
             email VARCHAR(255) NOT NULL UNIQUE,
@@ -31,7 +31,7 @@ async function createTables(connection: mysql.Connection): Promise<void> {
         );
     `);
 
-    await connection.query(`
+  await connection.query(`
         CREATE TABLE IF NOT EXISTS password_resets(
             token VARCHAR(255) PRIMARY KEY NOT NULL,
             userId INT NOT NULL,
@@ -40,7 +40,7 @@ async function createTables(connection: mysql.Connection): Promise<void> {
         );
     `);
 
-    await connection.query(`
+  await connection.query(`
         CREATE TABLE IF NOT EXISTS validRefreshTokens(
             token VARCHAR(255) PRIMARY KEY NOT NULL,
             userId INT NOT NULL UNIQUE,
@@ -48,7 +48,7 @@ async function createTables(connection: mysql.Connection): Promise<void> {
         );
     `);
 
-    await connection.query(`
+  await connection.query(`
         CREATE TABLE IF NOT EXISTS \`groups\`(
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
@@ -56,7 +56,7 @@ async function createTables(connection: mysql.Connection): Promise<void> {
         );
     `);
 
-    await connection.query(`
+  await connection.query(`
         CREATE TABLE IF NOT EXISTS members_in_groups (
             userId INT NOT NULL,
             groupId INT NOT NULL,
@@ -66,14 +66,14 @@ async function createTables(connection: mysql.Connection): Promise<void> {
         );
     `);
 
-    await connection.query(`
+  await connection.query(`
         CREATE TABLE IF NOT EXISTS tags (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL
         );
     `);
 
-    await connection.query(`
+  await connection.query(`
         CREATE TABLE IF NOT EXISTS expenses (
             id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
             groupId INT NOT NULL,
@@ -89,7 +89,7 @@ async function createTables(connection: mysql.Connection): Promise<void> {
         );
     `);
 
-    await connection.query(`
+  await connection.query(`
         CREATE TABLE IF NOT EXISTS payed_for (
             expenseID INT NOT NULL,
             userID INT NOT NULL,

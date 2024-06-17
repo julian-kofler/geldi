@@ -10,32 +10,32 @@
 </template>
 
 <script>
-import PrimaryButton from '../components/SecondaryButton.vue'
-import NavigationBar from '../components/NavigationBar.vue'
+import PrimaryButton from "../components/SecondaryButton.vue";
+import NavigationBar from "../components/NavigationBar.vue";
 export default {
-  name: 'SettingsScreen',
+  name: "SettingsScreen",
   components: {
     PrimaryButton,
-    NavigationBar
+    NavigationBar,
   },
   methods: {
     logout() {
-        localStorage.removeItem('jwt');
-        localStorage.removeItem('refreshToken');
-        this.$router.push('/login');
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("refreshToken");
+      this.$router.push("/login");
     },
     change_password() {
-        this.$router.push('/change-password');
+      this.$router.push("/change-password");
     },
     impressum() {
-        this.$router.push('/impressum');
+      this.$router.push("/impressum");
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-.root{
+.root {
   padding: 2rem;
 }
 .title {

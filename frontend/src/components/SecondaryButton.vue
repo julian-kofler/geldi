@@ -4,14 +4,14 @@
 
 <script>
 export default {
-  name: 'SecondaryButton',
+  name: "SecondaryButton",
   props: {
     onClick: {
       type: Function,
-      required: true
-    }
-  }
-}
+      required: true,
+    },
+  },
+};
 </script>
 
 <style scoped>
