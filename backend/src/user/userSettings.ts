@@ -75,4 +75,25 @@ export class UserSetgns {
       };
     }
   }
+  async getUserByEmail(
+    email: string
+  ): Promise<{ statusCode: number; result: any }> {
+    console.log("email: ", email);
+    try {
+      const sql = "SELECT id, nickname FROM users WHERE email = ?";
+      const [rows] = await this.db.query<User[]>(sql, [email]);
+      if (rows.length > 0) {
+        // const userId = rows[0].id;
+        return { statusCode: 200, result: rows[0] };
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      logger.error((error as Error).message);
+      return {
+        statusCode: 500,
+        result: { message: "An error occurred while fetching the userId from email" },
+      };
+    }
+  }
 }

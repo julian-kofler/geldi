@@ -42,7 +42,7 @@ router.get(
       const response = await userSetgns.getSettings(
         parseInt(req.params.userid)
       );
-      res.status(response.statusCode).json(response.result.nickname);
+      res.status(response.statusCode).json(response.result);
     }
   }
 );
@@ -55,5 +55,14 @@ router.get(
     }
   }
 );
-
+router.get(
+  "/userid/:email",
+  loginRequired,
+  async (req: RequestWithUser, res: Response) => {
+    if (userIsDefined(req)) {
+      const response = await userSetgns.getUserByEmail(req.params.email);
+      res.status(response.statusCode).json(response);
+    }
+  }
+);
 export default router;

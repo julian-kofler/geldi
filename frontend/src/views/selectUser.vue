@@ -72,9 +72,24 @@ const isSelected = (user) => {
   background-color: #0056b3; /* Slightly darker shade of blue on hover for interactive feedback */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increased shadow on hover for a "lifted" effect */
 }
+.user-list li {
+  display: inline-block; /* Allows the element's width to fit its content */
+  white-space: nowrap; /* Prevents text from wrapping */
+  padding: 5px 10px; /* Adjust as needed for padding around the text */
+  margin: 5px; /* Space between list items */
+  border: 1px solid #ccc; /* Optional: adds a border */
+  border-radius: 5px; /* Optional: rounds the corners */
+}
 
 .user-list {
   list-style-type: none; /* Remove default list styling */
   padding: 0; /* Remove default padding */
+  width: fit-content;
+  flex-wrap: wrap;
+}
+.user-select-container {
+  max-width: 400px; /* Adjust based on your design */
+  margin: 0 auto; /* Center the list */
+  flex-wrap: wrap;
 }
 </style>

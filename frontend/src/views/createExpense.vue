@@ -19,7 +19,7 @@
     </div>
 
     <p />
-    <label>Bezahl für:</label>
+    <label>Bezahlt für:</label>
     <SelectUser :users="group_members" :multiple="true"></SelectUser>
 
     <div class="buttonContainer">
