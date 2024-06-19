@@ -1,5 +1,10 @@
 .env
-node_modules/
 .vscode
 build/
+node_modules/
+build/
+package-lock.json
+package.json
+frontend/src/assets/geldi.svg:Zone.Identifier
+logs/
 ausgabenverwaltung.code-workspace
