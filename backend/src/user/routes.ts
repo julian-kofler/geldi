@@ -46,5 +46,14 @@ router.get(
     }
   }
 );
+router.get(
+  "/myUserId",
+  loginRequired,
+  async (req: RequestWithUser, res: Response) => {
+    if (userIsDefined(req)) {
+      res.status(200).json({ userId: req.user.id });
+    }
+  }
+);
 
 export default router;

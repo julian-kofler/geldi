@@ -8,9 +8,13 @@
       <label>Bezahlt von:</label>
       <select v-model="payedBy" class="styled-select">
         <option disabled value="">Please select one</option>
-        <option>A</option>
-        <option>B</option>
-        <option>C</option>
+        <option
+          v-for="member in group_members"
+          :key="member.userId"
+          :value="member.userId"
+        >
+          {{ member.nickname }}
+        </option>
       </select>
     </div>
 
@@ -36,7 +40,7 @@ import SelectUser from "../views/selectUser.vue";
 const route = useRoute();
 const router = useRouter();
 
-const payedBy = ref("A");
+const payedBy = ref(-1);
 
 const group_members = ref([]);
 const selectedUsers = ref([]);
@@ -86,11 +90,11 @@ const speichern = async () => {
         title: title.value,
         amount: amount.value,
         date: date.value,
-        payedBy: "1",
+        payedBy: payedBy.value,
         payedFor:
           selectedUsers.value.length === 0
-            ? group_members.value.map((member) => member.id)
-            : selectedUsers.value.map((member) => member.id),
+            ? group_members.value.map((member) => member.userId)
+            : selectedUsers.value.map((member) => member.userId),
       }),
     }
   );
@@ -144,8 +148,36 @@ const loadGroupMembers = async () => {
 const abbrechen = () => {
   router.push(`/groups/${route.params.groupId}`);
 };
+const loadMyUserId = async () => {
+  await loadGroupMembers();
+  let response = await fetch("http://localhost:5000/api/user/myUserId", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    },
+  });
+  const data = await response.json();
+  if (response.ok) {
+    payedBy.value = data.userId;
+
+  } else {
+    console.error(
+      "Failed to fetch groups:",
+      response.status,
+      response.statusText
+    );
+    if (data.message == "Token expired") {
+      const refreshed = await refreshjwtToken();
+      if (refreshed) {
+        await loadMyUserId();
+      }
+    }
+  }
+};
+
 onMounted(() => {
-  loadGroupMembers();
+  loadMyUserId();
+  console.log("payedby:", payedBy.value);
+  console.log("payedfor:", selectedUsers.value);
 });
 </script>
 <style scoped>
