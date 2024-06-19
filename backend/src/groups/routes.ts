@@ -86,5 +86,23 @@ router.post(
     res.status(response.statusCode).json(response.message);
   }
 );
-
+router.get(
+  "/:groupID/members",
+  loginRequired,
+  async (req: RequestWithUser, res: Response) => {
+    let userID = -1;
+    if (userIsDefined(req)) {
+      userID = req.user.id;
+    }
+    if (userID === -1) {
+      res.status(401).json({ message: "No or invalid token provided" });
+      return;
+    }
+    const groupID = req.params.groupID;
+    const response = await group.getMembers(parseInt(groupID));
+    res
+      .status(response.statusCode)
+      .json({ message: response.message, result: response.result });
+  }
+);
 export default router;

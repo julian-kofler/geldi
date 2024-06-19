@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import mysql from "mysql2/promise";
+import mysql, { RowDataPacket } from "mysql2/promise";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
@@ -50,6 +50,24 @@ export class GroupManagement {
     } catch (error) {
       console.error(error);
       return { statusCode: 500, message: "Internal server error" };
+    }
+  }
+
+  async getMembers(
+    groupID: number
+  ): Promise<{ statusCode: number; message: string; result: String[] }> {
+    try {
+      const sqlQuery =
+        "SELECT userId, nickname FROM members_in_groups as mig inner join users as u on mig.userId = u.id WHERE groupID = ?";
+      const values = [groupID];
+      // Assuming `this.db.execute` returns a structure similar to [rows, fields] which is common in MySQL
+      const [rows] = await this.db.execute<RowDataPacket[]>(sqlQuery, values);
+      // Cast rows to Member[] type
+      const members: String[] = rows as unknown as String[];
+      return { statusCode: 200, message: "successful", result: members };
+    } catch (error) {
+      console.error(error);
+      return { statusCode: 500, message: "Internal server error", result: [] };
     }
   }
 }
