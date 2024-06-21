@@ -14,10 +14,7 @@ export class UserSetgns {
     this.inputVal = new InputValidation();
   }
 
-  async updateSettings(
-    userSettings: IfUserSettings,
-    userId: number
-  ): Promise<{ statusCode: number; result: any }> {
+  public async updateSettings(userSettings: IfUserSettings, userId: number): Promise<{ statusCode: number; result: any }> {
     const emailCheck = await this.inputVal.isValidEmail(userSettings.email);
     const passwordCheck = await this.inputVal.isValidPassword(
       userSettings.password
@@ -53,9 +50,7 @@ export class UserSetgns {
     }
   }
 
-  async getSettings(
-    userId: number
-  ): Promise<{ statusCode: number; result: any }> {
+  public async getSettings(userId: number): Promise<{ statusCode: number; result: any }> {
     try {
       let settings: IfUserSettings;
       const sql = "SELECT nickname, email FROM users WHERE id = ?";
@@ -75,10 +70,8 @@ export class UserSetgns {
       };
     }
   }
-  async getUserByEmail(
-    email: string
-  ): Promise<{ statusCode: number; result: any }> {
-    console.log("email: ", email);
+
+  public async getUserByEmail(email: string): Promise<{ statusCode: number; result: any }> {
     try {
       const sql = "SELECT id, nickname FROM users WHERE email = ?";
       const [rows] = await this.db.query<User[]>(sql, [email]);

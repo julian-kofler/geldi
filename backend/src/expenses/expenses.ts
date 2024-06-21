@@ -1,14 +1,7 @@
-import jwt from "jsonwebtoken";
 import mysql from "mysql2/promise";
-import crypto from "crypto";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import zxcvbn from "zxcvbn";
 
-import { User } from "../user/types";
-import { Expense } from "./types";
-import { json } from "stream/consumers";
+import { Expense, ExpenseParams } from "./types";
+import { logger } from "../middleware/global.js"
 
 export class ExpenseManagement {
   private db: mysql.Connection;
@@ -17,52 +10,48 @@ export class ExpenseManagement {
     this.db = db;
   }
 
-  async createExpense(
-    groupId: number,
-    title: string,
-    amount: string,
-    date: string,
-    payedBy: string,
-    payedFor: string
-  ): Promise<{ statusCode: number; message: string }> {
-    // TODO: Validate the data
-    if (!title || !amount || !date || !payedBy || !payedFor) {
-      throw new Error("Missing required fields");
+  private isValidExpense(expense: ExpenseParams){
+    if (!expense || !expense.amount || !expense.title || !expense.payedBy || !expense.groupId || !expense.payedFor || !expense.timestamp){
+        return false;
     }
-    try {
-      const sql =
-        "INSERT INTO expenses (groupId, title, amount, timestamp, payedBy) VALUES (?, ?, ?, ?, ?)";
-      const values = [
-        groupId,
-        title,
-        amount,
-        new Date(date).toISOString().slice(0, 19).replace("T", " "),
-        payedBy,
-      ];
-      const [result] = await this.db.execute<mysql.OkPacket>(sql, values);
-      const expenseID = result.insertId;
+    else if (expense.amount < 0 || expense.title.length < 1 || expense.payedBy < 1 || expense.groupId < 1 || expense.payedFor.length < 1){
+        return false;
+    }
+    return true;
+}
 
-      for (const userID of payedFor) {
+  public async createExpense(expense: ExpenseParams): Promise<{ statusCode: number; message: string }> {
+    if(!this.isValidExpense(expense)){
+      return { statusCode: 400, message: "Invalid input" };
+    }
+
+    try {
+      const sql = "INSERT INTO expenses (groupId, title, amount, timestamp, payedBy, tagId, picPath) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      const values = [expense.groupId, expense.title, expense.amount, expense.timestamp, expense.payedBy, expense.tagId, expense.picPath];
+      const response = await this.db.execute<mysql.OkPacket>(sql, values);
+      const expenseID = response[0].insertId;
+
+      for (const userID of expense.payedFor) {
         const sql = "INSERT INTO payed_for (expenseID, userID) VALUES (?, ?)";
         const values = [expenseID, userID];
         await this.db.execute<Expense[]>(sql, values);
       }
-    } catch (error) {
+    } 
+    catch (error) {
+      logger.error((error as Error).message);
       return { statusCode: 500, message: "Internal server error" };
     }
-    return { statusCode: 200, message: "successful" };
+    return { statusCode: 200, message: "Expense creation successful" };
   }
-  async getExpenses(
-    groupId: number
-  ): Promise<{ statusCode: number; message: string; result: Expense[] }> {
+
+  public async getExpenses(groupId: number): Promise<{ statusCode: number; result: Expense[] }> {
     try {
       const sql = "SELECT * FROM expenses WHERE groupId = ?";
-      const values = [groupId];
-      const [expenses] = await this.db.execute<Expense[]>(sql, values);
-      return { statusCode: 200, message: "successful", result: expenses };
+      const [expenses] = await this.db.execute<Expense[]>(sql, groupId);
+      return { statusCode: 200, result: expenses };
     } catch (error) {
-      console.error(error);
-      return { statusCode: 500, message: "Internal server error", result: [] };
+      logger.error((error as Error).message)
+      return { statusCode: 500, result: [] };
     }
   }
 }
