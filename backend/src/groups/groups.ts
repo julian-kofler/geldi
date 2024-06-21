@@ -18,11 +18,11 @@ export class GroupManagement {
     try {
       const sqlQuery =
         "SELECT id, name, completed FROM  `groups` as g inner join members_in_groups as mg on g.id = mg.groupID where userID = ?";
-      const [groups] = await this.db.execute<Group[]>(sqlQuery, userID);
+      const [groups] = await this.db.execute<Group[]>(sqlQuery, [userID]);
       return { statusCode: 200, result: groups };
     } 
     catch (error) {
-      logger.error(error);
+      logger.error((error as Error).message);
       return { statusCode: 500, result: [] };
     }
   }

@@ -47,7 +47,7 @@ export class ExpenseManagement {
   public async getExpenses(groupId: number): Promise<{ statusCode: number; result: Expense[] }> {
     try {
       const sql = "SELECT * FROM expenses WHERE groupId = ?";
-      const [expenses] = await this.db.execute<Expense[]>(sql, groupId);
+      const [expenses] = await this.db.execute<Expense[]>(sql, [groupId]);
       return { statusCode: 200, result: expenses };
     } catch (error) {
       logger.error((error as Error).message)

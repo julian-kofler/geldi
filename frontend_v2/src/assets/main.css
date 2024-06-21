@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+:root {
+  --ff: "Montserrat", sans-serif;
+  --h1: bold 64px/72px var(--ff);
+  --p: 18px/30px var(--ff);
+  --colorprimary: white;
+  --colorsecondary: black;
+  --colorsecondary_2: #555;
+  --coloraccent: red;
+}
+body {
+  background: var(--colorprimary);
+  color: var(--colorsecondary);
+}
+h1 {
+  font: var(--h1);
+  color: red;
+}
+p {
+  font: var(--p);
+}
+label {
+  font-size: 1em;
+  color: var(--colorsecondary_2);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+input {
+  padding: 12px;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+/*a label and a input field*/
+.input-field { 
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+button {
+  border: 2px solid;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  border-radius: 5px;
+}
+.btn-primary {
+  background-color: var(--coloraccent);
+  border-color: var(--coloraccent);
+  color: var(--colorprimary);
+}
+.btn-secondary {
+  background-color: var(--colorprimary);
+  border-color: var(--coloraccent);
+  color: var(--colorsecondary);
+}

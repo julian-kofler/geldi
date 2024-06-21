@@ -26,7 +26,7 @@ export async function UserIsInGroup(req: RequestWithUser, res: Response, next: N
     const groupID = req.params.groupID;
     const userID = req.user.id;
 
-    const sql = 'SELECT * FROM user_groups WHERE user_id = $1 AND group_id = $2';
+    const sql = 'SELECT * FROM members_in_groups WHERE userId = ? AND groupId = ?';
     const values = [userID, groupID];
     const isMember = await database.query(sql, values);
 
