@@ -4,10 +4,11 @@ import { Request, Response, NextFunction } from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
+import cors from "cors";
 
 import authRoutes from "./authentication/routes.js";
 import GroupRoutes from "./groups/routes.js";
-import cors from "cors";
+import expenseRoutes from "./expenses/routes.js";
 import userRoutes from "./user/routes.js";
 import { HttpError } from "./middleware/types.js";
 import { logger } from "./middleware/global.js";
@@ -47,8 +48,7 @@ const authLimiter = rateLimit({
 // Routes
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/user", userRoutes);
-// app.use("/api/app-logic", appLogicRoutes)
-// app.use("/api/expenses", expensesRoutes);
+app.use("/api/expenses", expenseRoutes);
 app.use("/api/groups", GroupRoutes);
 
 // Global rate limiter
@@ -64,9 +64,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof HttpError) {
     res.status(err.statusCode).send({ message: err.message });
   } else {
-    res
-      .status(500)
-      .send({ message: err.message || "An unexpected error occurred" });
+    res.status(500).send({ message: err.message || "An unexpected error occurred" });
   }
 });
 

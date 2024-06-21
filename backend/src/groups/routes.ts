@@ -1,108 +1,45 @@
 import express, { Request, Response } from "express";
 
-import { getConnection } from "../database.js";
+import { db } from "../database.js";
 import { GroupManagement } from "./groups.js";
-import { ExpenseManagement } from "../expenses/expenses.js";
 
 import { loginRequired, userIsDefined } from "../middleware/auth.js";
-import { UserSetgns } from "../user/userSettings.js";
 import { RequestWithUser } from "../middleware/types.js";
-import { IfUserSettings } from "../user/types.js";
+import { UserIsInGroup } from "../middleware/global.js";
 
 const router = express.Router();
-const group = new GroupManagement(await getConnection());
-const expense = new ExpenseManagement(await getConnection());
+const groupMgmt = new GroupManagement(await db);
 
 router.get("/", loginRequired, async (req: RequestWithUser, res: Response) => {
-  let userID = -1;
-  if (userIsDefined(req)) {
-    userID = req.user.id;
+  if(userIsDefined(req)){
+    const response = await groupMgmt.getGroups(req.user.id);
+    res.status(response.statusCode).json({ result: response.result });
   }
-  if (userID === -1) {
-    res.status(401).json({ message: "No or invalid token provided" });
-    return;
-  }
-
-  const response = await group.getGroups(userID);
-  res
-    .status(response.statusCode)
-    .json({ message: response.message, result: response.result });
 });
+
 router.post("/", loginRequired, async (req: RequestWithUser, res: Response) => {
-  let userID = -1;
-  if (userIsDefined(req)) {
-    userID = req.user.id;
+  if(userIsDefined(req)){
+    const { name, members } = req.body;
+    const response = await groupMgmt.createGroup(name, members);
+    res.status(response.statusCode).json({ message: response.message });
   }
-  if (userID === -1) {
-    res.status(401).json({ message: "No or invalid token provided" });
-    return;
-  }
-
-  const { name, members } = req.body;
-  const response = await group.createGroup(name, members);
-  res.status(response.statusCode).json({ message: response.message });
 });
-router.get(
-  "/:groupID/expenses",
-  loginRequired,
-  async (req: RequestWithUser, res: Response) => {
-    let userID = -1;
-    if (userIsDefined(req)) {
-      userID = req.user.id;
-    }
-    if (userID === -1) {
-      res.status(401).json({ message: "No or invalid token provided" });
-      return;
-    }
-    const groupID = req.params.groupID;
-    const response = await expense.getExpenses(parseInt(groupID));
-    res
-      .status(response.statusCode)
-      .json({ message: response.message, result: response.result });
-  }
-);
-router.post(
-  "/:groupID/expenses",
-  loginRequired,
-  async (req: RequestWithUser, res: Response) => {
-    let userID = -1;
-    if (userIsDefined(req)) {
-      userID = req.user.id;
-    }
-    if (userID === -1) {
-      res.status(401).json({ message: "No or invalid token provided" });
-      return;
-    }
 
-    const { groupId, title, amount, date, payedBy, payedFor } = req.body;
-    const response = await expense.createExpense(
-      groupId,
-      title,
-      amount,
-      date,
-      payedBy,
-      payedFor
-    );
-    res.status(response.statusCode).json(response.message);
-  }
-);
-router.get(
-  "/:groupID/members",
-  loginRequired,
-  async (req: RequestWithUser, res: Response) => {
-    let userID = -1;
+router.get("/:groupID/members", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: Response) => {
+    if(userIsDefined(req)){
+      const groupID = req.params.groupID;
+      const response = await groupMgmt.getMembers(parseInt(groupID));
+      res.status(response.statusCode).json({ result: response.result });
+    }
+});
+
+router.post("/:groupID/inviteMember", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: Response) =>{
     if (userIsDefined(req)) {
-      userID = req.user.id;
+      const groupID = req.params.groupID;
+      const { email } = req.body;
+      const response = await groupMgmt.inviteMember(email, parseInt(groupID));
+      res.status(response.statusCode).json({ message: response.message });
     }
-    if (userID === -1) {
-      res.status(401).json({ message: "No or invalid token provided" });
-      return;
-    }
-    const groupID = req.params.groupID;
-    const response = await group.getMembers(parseInt(groupID));
-    res
-      .status(response.statusCode)
-      .json({ message: response.message, result: response.result });
-  }
-);
+});
+
 export default router;
