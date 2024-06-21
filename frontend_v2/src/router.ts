@@ -10,7 +10,7 @@ const router = createRouter({
     },
     {
       path: "/signup",
-      name: "signup",
+      name: "Signup",
       component: () => import("./modules/registration/signup.vue"),
     },
   ],
