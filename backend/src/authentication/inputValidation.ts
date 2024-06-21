@@ -22,7 +22,8 @@ export class InputValidation {
       this.fetchCommonPasswords();
     }
     if (!fs.existsSync(this.commonPasswordsPath)) {
-      throw new Error("Common passwords file not found");
+      logger.error("Common passwords file not found, expected location: " + this.commonPasswordsPath);
+      throw new Error("Common passwords file not found, expected location: " + this.commonPasswordsPath);
     }
   }
 
