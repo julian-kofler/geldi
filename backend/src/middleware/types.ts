@@ -1,16 +1,14 @@
 import { Request } from "express";
+import mysql from "mysql2/promise";
+
 import { User } from "../user/types";
 
-// Define a new interface that extends the existing Request interface
+// new interface that extends the existing Request interface
 export interface RequestWithUser extends Request {
   user?: User;
 }
 
-export class HttpError extends Error {
-  statusCode: number;
-
-  constructor(message: string, statusCode: number) {
-    super(message);
-    this.statusCode = statusCode;
-  }
+export interface membersInGroups extends mysql.RowDataPacket {
+  userId: number;
+  groupId: number;
 }

@@ -1,11 +1,10 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 import { User } from "../user/types";
 import { RequestWithUser } from "./types.js";
 import { UserRepository } from "../user/userRepository.js";
 import { db } from "../database.js";
-import { HttpError } from "./types.js";
 import { logger } from "./global.js";
 
 const userRepo = new UserRepository(await db);
@@ -27,36 +26,41 @@ export const loginRequired = async (
     const token = authHeader.split(" ")[1];
 
     jwt.verify(token, secret, async (err, payload) => {
+      // check if token itself is valid
       if (err) {
         if (err instanceof jwt.TokenExpiredError) {
-          return next(new HttpError("Token expired", 401));
+          res.status(401).json({ message: "Token expired" });
         } else if (err instanceof jwt.NotBeforeError) {
-          throw new HttpError("Token not active", 401);
+          res.status(401).json({ message: "Token not active" });
         } else {
-          logger.error(err);
-          return next(new HttpError("Invalid token", 401));
+          logger.error((err as Error).message);
+          res.status(401).json({ message: "Invalid token" });
         }
+        return;
       }
 
-      if (typeof payload !== "string" && payload) {
-        const userId = payload.userId;
-        if (typeof userId === "number") {
-          const user: User | null = await userRepo.getUserByID(userId);
-          if (user) {
-            req.user = user;
-            next();
-          } else {
-            return next(new HttpError("Invalid token", 401));
+      // check if payload is valid, set user in request if so
+      try{
+        if (payload && typeof payload == "object") {
+          const userId = payload.userId;
+          if (typeof userId === "number") {
+            const user: User | null = await userRepo.getUserByID(userId);
+            if (user){
+              req.user = user;
+              next();
+              return;
+            }
           }
-        } else {
-          return next(new HttpError("Invalid token", 401));
         }
-      } else {
-        return next(new HttpError("Invalid token", 401));
+        res.status(401).json({ message: "Invalid token" });
+      }
+      catch(error){
+        logger.error((error as Error).message);
+        res.status(500).json({ message: "Invalid token" });
       }
     });
   } else {
-    return next(new HttpError("AuthHeader missing", 401));
+    res.status(401).json({ message: "Authn header missing" });
   }
 };
 
