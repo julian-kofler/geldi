@@ -3,9 +3,5 @@
 build/
 node_modules/
 build/
-package-lock.json
-package.json
-frontend/src/assets/geldi.svg:Zone.Identifier
 logs/
 ausgabenverwaltung.code-workspace
-frontend_v2/public/geldi.ico:Zone.Identifier
