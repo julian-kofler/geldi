@@ -73,7 +73,7 @@ export class GroupManagement {
     }
   }
 
-  public async createGroup(group: GroupParams): Promise<{ statusCode: number; message: string }> {
+  public async createGroup(group: GroupParams, creator: User): Promise<{ statusCode: number; message: string }> {
     if(!this.isValidGroup(group)) {
       return { statusCode: 400, message: "Invalid input" };
     }
@@ -84,6 +84,7 @@ export class GroupManagement {
       const [result] = await this.db.execute<mysql.OkPacket>(sqlQuery, values);
       const groupID = result.insertId;
 
+      await this.addMember(creator.email, groupID);
       for (let memberEmail of group.memberEmails) {
         await this.addMember(memberEmail, groupID);
       }

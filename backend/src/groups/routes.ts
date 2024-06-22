@@ -19,9 +19,11 @@ router.get("/", loginRequired, async (req: RequestWithUser, res: Response) => {
 });
 
 router.post("/", loginRequired, async (req: RequestWithUser, res: Response) => {
-  const group: GroupParams = req.body;
-  const response = await groupMgmt.createGroup(group);
-  res.status(response.statusCode).json({ message: response.message });
+  if(userIsDefined(req)){
+    const group: GroupParams = req.body;
+    const response = await groupMgmt.createGroup(group, req.user);
+    res.status(response.statusCode).json({ message: response.message });
+  }
 });
 
 router.put("/", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: Response) => {
