@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 
 import { getConnection } from "../database.js";
 import { Auth } from "./auth.js";
+import { RequestWithUser } from "../middleware/types.js";
+import { loginRequired, userIsDefined } from "../middleware/auth.js";
 
 const router = express.Router();
 const auth = new Auth(await getConnection());
@@ -47,6 +49,13 @@ router.post("/password-reset", async (req: Request, res: Response) => {
   const { token, password } = req.body;
   const response = await auth.passwordReset(token, password);
   res.status(response.statusCode).json(response.result);
+});
+
+router.delete("/account", loginRequired, async (req: RequestWithUser, res: Response) => {
+  if(userIsDefined(req)){
+    const response = await auth.deleteAccount(req.user.id);
+    res.status(response.statusCode).json(response.message);
+  }
 });
 
 export default router;
