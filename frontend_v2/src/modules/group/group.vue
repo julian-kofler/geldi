@@ -22,7 +22,7 @@ const fetchGroupDetails = async () => {
 };
 
 const fetchExpenses = async () => {
-  const url = `/expenses/group/${route.params.groupID}`;
+  const url = `/expenses?groupId=${route.params.groupID}`;
   const res = await getBackend(url);
   expenses.value = res.result
     .map((expense) => ({
