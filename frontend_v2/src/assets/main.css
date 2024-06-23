@@ -2,8 +2,8 @@
 
 :root {
   --ff: "Montserrat", sans-serif;
-  --h1: bold 64px/72px var(--ff);
-  --p: 18px/30px var(--ff);
+  --h1: bold 48px/56px var(--ff);
+  --p: 16px/24px var(--ff);
   --colorprimary: white;
   --colorsecondary: black;
   --colorsecondary_2: #555;
@@ -101,9 +101,13 @@ button {
 .top-bar {
   top: 0;
 }
-.content-container {
-  margin-top: 60px;
+.with-bottom-bar{
   margin-bottom: 60px;
+}
+.with-top-bar{
+  margin-top: 60px;
+}
+.content-container {
   padding: 2rem;
   display: flex;
   flex-direction: column;

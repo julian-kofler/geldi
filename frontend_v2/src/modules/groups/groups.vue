@@ -19,11 +19,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1>Meine Gruppen</h1>
   <button @click="router.push('/groups/new')" class="btn-primary floating-button">
     + Neue Gruppe
   </button>
-  <div>
+  <div class="content-container with-bottom-bar">
+    <h1>Meine Gruppen</h1>
     <router-link
       v-for="group in groups"
       :key="group.id"

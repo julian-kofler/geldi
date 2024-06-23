@@ -34,8 +34,8 @@ const nichtImplementiert = () => {
 </script>
 
 <template>
-  <h1>Einstellungen</h1>
-  <div>
+  <div class="content-container with-bottom-bar">
+    <h1>Einstellungen</h1>
     <button @click="logout()" class="btn-primary">Logout</button>
     <button @click="nichtImplementiert" class="btn-primary">Passwort ändern</button>
     <button @click="nichtImplementiert" class="btn-primary">Nickname ändern</button>

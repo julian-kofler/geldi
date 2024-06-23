@@ -50,7 +50,7 @@ onMounted(() => {
   <div>
     <TopBar v-if="!groupDetails">Loading...</TopBar>
     <TopBar v-else>{{ groupDetails.name  }}</TopBar>
-    <div class="content-container">
+    <div class="content-container with-top-bar with-bottom-bar">
       <!-- <h1 class="loading" v-if="!groupDetails">Loading...</h1>
       <h1 v-else>{{ groupDetails.name }}</h1> -->
       <div>

@@ -75,7 +75,7 @@ onMounted(() => {
 
 <template>
   <TopBar>{{ props.mode === "view" ? expense.title : "Neue Ausgabe" }}</TopBar>
-  <div class="content-container">
+  <div class="content-container with-top-bar">
     <!-- <h1>Ausgabe:</h1> -->
     <div>
       <button @click="backToGroups" class="btn-primary">< zurück</button>
