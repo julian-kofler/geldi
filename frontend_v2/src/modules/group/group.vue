@@ -4,7 +4,8 @@ import { getBackend } from "@/components/backendHandler";
 import { useRoute, useRouter } from "vue-router";
 import expenseCard from "./components/expenseCard.vue";
 import type { Expense } from "./components/types";
-import BottomBar from "./components/bottomBar.vue"
+import BottomBar from "./components/bottomBar.vue";
+import TopBar from "@/components/headerBar.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -26,17 +27,17 @@ const fetchExpenses = async () => {
   expenses.value = res.result
     .map((expense) => ({
       ...expense,
-      date: expense.timestamp.split('T')[0],
+      date: expense.timestamp.split("T")[0],
     }))
     .sort((a: Expense, b: Expense) => {
       return new Date(b.timestamp) - new Date(a.timestamp);
     });
 };
 
-const newExpense =() =>{
+const newExpense = () => {
   router.push(`/groups/${groupDetails.value.id}/expense/new`);
 };
-const viewExpense = (expID: number) =>{
+const viewExpense = (expID: number) => {
   router.push(`/groups/${groupDetails.value.id}/expense/${expID}`);
 };
 onMounted(() => {
@@ -47,17 +48,21 @@ onMounted(() => {
 
 <template>
   <div>
-    <h1 class="loading" v-if="!groupDetails">Loading...</h1>
-    <h1 v-else>{{ groupDetails.name }}</h1>
-    <div>
-      <button @click="newExpense" class="btn-primary">+ Neue Ausgabe</button>
-      <expenseCard
-        v-for="expense in expenses"
-        :key="expense.id"
-        :expense="expense"
-        @editExpense="viewExpense"
-      ></expenseCard>
+    <TopBar v-if="!groupDetails">Loading...</TopBar>
+    <TopBar v-else>{{ groupDetails.name  }}</TopBar>
+    <div class="content-container">
+      <!-- <h1 class="loading" v-if="!groupDetails">Loading...</h1>
+      <h1 v-else>{{ groupDetails.name }}</h1> -->
+      <div>
+        <button @click="newExpense" class="btn-primary">+ Neue Ausgabe</button>
+        <expenseCard
+          v-for="expense in expenses"
+          :key="expense.id"
+          :expense="expense"
+          @editExpense="viewExpense"
+        ></expenseCard>
+      </div>
     </div>
+    <BottomBar></BottomBar>
   </div>
-  <BottomBar></BottomBar>
 </template>

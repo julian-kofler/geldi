@@ -71,17 +71,20 @@ button {
 .loading{
   color: grey;
 }
-.bottom-bar {
+.bar {
   display: flex;
   justify-content: space-around;
   position: fixed;
-  bottom: 0;
   width: 100%;
   background-color: whitesmoke;
   padding: 10px 0;
   box-sizing: border-box;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   align-items: center;
+  height: 60px;
+}
+.bottom-bar {
+  bottom: 0;
 }
 .bottom-bar-item {
   text-decoration: none;
@@ -89,4 +92,14 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.top-bar {
+  top: 0;
+}
+.content-container {
+  margin-top: 60px;
+  margin-bottom: 60px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
 }

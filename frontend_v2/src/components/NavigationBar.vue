@@ -1,5 +1,5 @@
 <template>
-  <div class="bottom-bar">
+  <div class="bar bottom-bar">
     <router-link to="/groups" class="bottom-bar-item" active-class="active">
       <font-awesome-icon icon="fa-solid fa-user-group" />
       <span>Gruppen</span>

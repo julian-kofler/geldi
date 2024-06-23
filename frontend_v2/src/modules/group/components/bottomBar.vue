@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-    <div class="bottom-bar">
+    <div class="bar bottom-bar">
       <div class="bottom-bar-item">
         <div class="cost-label">Meine Kosten</div>
         <div class="cost-value">00,00€</div>

@@ -5,6 +5,7 @@ import { useRoute, useRouter } from "vue-router";
 import { getBackend } from "@/components/backendHandler";
 import selectUser from "../components/selectUser.vue"
 import abort_save_buttons from "@/components/abort_save_buttons.vue";
+import TopBar from "@/components/headerBar.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -15,7 +16,7 @@ const props = defineProps({
 const original_expense = ref<ExpenseParams>();
 const expense = ref<ExpenseParams>({
   id: 0,
-  title: "",
+  title: "Loading...",
   amount: 0.0,
   timestamp: new Date(),
   payedBy: 0,
@@ -73,8 +74,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <h1>Ausgabe:</h1>
+  <TopBar>{{ props.mode === "view" ? expense.title : "Neue Ausgabe" }}</TopBar>
+  <div class="content-container">
+    <!-- <h1>Ausgabe:</h1> -->
     <div>
       <button @click="backToGroups" class="btn-primary">< zurück</button>
       <button
