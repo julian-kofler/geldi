@@ -3,18 +3,18 @@
 ## Requirements
 
 - MySQL
-- nodejs
+- nodejs (including npm)
 
 ## Backend Setup
 
-1. ´cd ./backend/´       change to the backend folder
-2. ´node setup.cjs´      execute the setup script, read the information printed to console
-4. fill the newly created .env file with values and create the database
-5. ´tsc´                 compile the typescript files to javascript
-6. ´nodemon´             start the server
+1. ```cd ./backend/``` Change to the backend folder
+2. ```npm install``` Install the necessary dependencies
+2. ```node setupEnvFile.cjs``` Setup the file for environmental variables
+4. Create a MySQL database and fill the newly created .env file with values
+5. ```npm run dev``` Start the server in a development environment
 
 ## Frondend Setup
 
-1. ´cd ./frontend´
-2. ´npm install´
-3. ´npm run dev´
+1. ```cd ./frontend``` Change to the frontend folder
+2. ```npm install``` Install the necessary dependencies
+3. ```npm run dev``` Start the server in a development environment

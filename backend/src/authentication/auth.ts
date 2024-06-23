@@ -6,6 +6,8 @@ import nodemailer from "nodemailer";
 import cron from "node-cron";
 import CryptoES from "crypto-es";
 
+import { Group } from "../groups/types";
+
 import {
   SignUpResponse,
   jwtRefreshResponse,
@@ -286,7 +288,7 @@ export class Auth {
       const token = this.createJWT(user!.id);
       const refreshToken = await this.createRefreshToken(user!.id);
       return {
-        statusCode: 200,
+        statusCode: 201,
         result: {
           message: "User signup successful",
           jwt: token,
@@ -499,6 +501,38 @@ export class Auth {
           refreshToken: "",
         },
       };
+    }
+  }
+
+  public async deleteAccount(
+    userId: number
+  ): Promise<{ statusCode: number; message: string }> {
+    try {
+      // select groups left by the user
+      const [rows] = await this.db.execute<Group[]>("SELECT id, name, completed FROM \`groups\` as g inner join members_in_groups as mg" +
+        " ON g.id = mg.groupId WHERE userId = ?", [userId]);
+
+      await this.db.execute("DELETE FROM payed_for WHERE userID = ?", [userId]);
+      await this.db.execute("DELETE FROM expenses WHERE payedBy = ?", [userId]);
+      await this.db.execute("DELETE FROM members_in_groups WHERE userId = ?", [userId]);
+      
+      // delete groups left by the user that have no other members
+      for (const group of rows) {
+        const [members] = await this.db.execute("SELECT userId FROM members_in_groups WHERE groupId = ?", [group.id]);
+        console.log(members);
+        if (!members) {
+          await this.db.execute("DELETE FROM \`groups\` WHERE id = ?", [group.id]);
+        }
+      }
+      await this.db.execute("DELETE FROM password_resets WHERE userId = ?", [userId]);
+      await this.db.execute("DELETE FROM users WHERE id = ?", [userId]);
+      await this.invalidateRefreshToken(userId);
+
+      return { statusCode: 200, message: "Account deleted successfully" };
+    } 
+    catch (error) {
+      logger.error((error as Error).message);
+      return { statusCode: 500, message: "Error deleting account" };
     }
   }
 }

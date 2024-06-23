@@ -12,6 +12,7 @@ export interface Expense extends mysql.RowDataPacket {
 }
 
 export interface ExpenseParams {
+  id?: number;
   groupId: number;
   title: string;
   amount: number;

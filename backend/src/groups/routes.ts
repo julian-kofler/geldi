@@ -6,6 +6,7 @@ import { GroupManagement } from "./groups.js";
 import { loginRequired, userIsDefined } from "../middleware/auth.js";
 import { RequestWithUser } from "../middleware/types.js";
 import { UserIsInGroup } from "../middleware/global.js";
+import { GroupParams } from "./types.js";
 
 const router = express.Router();
 const groupMgmt = new GroupManagement(await db);
@@ -19,27 +20,22 @@ router.get("/", loginRequired, async (req: RequestWithUser, res: Response) => {
 
 router.post("/", loginRequired, async (req: RequestWithUser, res: Response) => {
   if(userIsDefined(req)){
-    const { name, members } = req.body;
-    const response = await groupMgmt.createGroup(name, members);
+    const group: GroupParams = req.body;
+    const response = await groupMgmt.createGroup(group, req.user);
     res.status(response.statusCode).json({ message: response.message });
   }
 });
 
-router.get("/:groupID/members", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: Response) => {
-    if(userIsDefined(req)){
-      const groupID = req.params.groupID;
-      const response = await groupMgmt.getMembers(parseInt(groupID));
-      res.status(response.statusCode).json({ result: response.result });
-    }
+router.put("/", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: Response) => {
+  const group: GroupParams = req.body;
+  const response = await groupMgmt.editGroup(group);
+  res.status(response.statusCode).json({ message: response.message });
 });
 
-router.post("/:groupID/inviteMember", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: Response) =>{
-    if (userIsDefined(req)) {
-      const groupID = req.params.groupID;
-      const { email } = req.body;
-      const response = await groupMgmt.inviteMember(email, parseInt(groupID));
-      res.status(response.statusCode).json({ message: response.message });
-    }
+router.delete("/group/:groupID", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: Response) => {
+  const groupID = req.params.groupID;
+  const response = await groupMgmt.deleteGroup(parseInt(groupID));
+  res.status(response.statusCode).json({ message: response.message });
 });
 
 export default router;

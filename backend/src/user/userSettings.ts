@@ -1,4 +1,5 @@
 import mysql from "mysql2/promise";
+import bcrypt from "bcryptjs";
 
 import { User } from "./types";
 import { IfUserSettings } from "./types";
@@ -28,12 +29,13 @@ export class UserSetgns {
     }
 
     try {
+      const pwHash = await bcrypt.hash(userSettings.password, 10);
       const sql =
         "UPDATE users SET nickname = ?, email = ?, password = ? WHERE id = ?";
       await this.db.query(sql, [
         userSettings.nickname,
         userSettings.email,
-        userSettings.password,
+        pwHash,
         userId,
       ]);
 
@@ -67,25 +69,6 @@ export class UserSetgns {
       return {
         statusCode: 500,
         result: { message: "An error occurred while fetching settings" },
-      };
-    }
-  }
-
-  public async getUserByEmail(email: string): Promise<{ statusCode: number; result: any }> {
-    try {
-      const sql = "SELECT id, nickname FROM users WHERE email = ?";
-      const [rows] = await this.db.query<User[]>(sql, [email]);
-      if (rows.length > 0) {
-        // const userId = rows[0].id;
-        return { statusCode: 200, result: rows[0] };
-      } else {
-        throw new Error("User not found");
-      }
-    } catch (error) {
-      logger.error((error as Error).message);
-      return {
-        statusCode: 500,
-        result: { message: "An error occurred while fetching the userId from email" },
       };
     }
   }

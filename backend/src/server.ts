@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import { Request, Response, NextFunction } from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -10,7 +9,6 @@ import authRoutes from "./authentication/routes.js";
 import GroupRoutes from "./groups/routes.js";
 import expenseRoutes from "./expenses/routes.js";
 import userRoutes from "./user/routes.js";
-import { HttpError } from "./middleware/types.js";
 import { logger } from "./middleware/global.js";
 
 // load .env file
@@ -58,15 +56,6 @@ const globLimiter = rateLimit({
   message: "Too many requests, please try again later.",
 });
 app.use(globLimiter);
-
-// Middleware for error handling
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof HttpError) {
-    res.status(err.statusCode).send({ message: err.message });
-  } else {
-    res.status(500).send({ message: err.message || "An unexpected error occurred" });
-  }
-});
 
 app.listen(process.env.BACKEND_PORT, () =>
   console.log("Server running on port " + process.env.BACKEND_PORT)
