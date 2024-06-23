@@ -28,21 +28,21 @@ const router = createRouter({
       component: () => import("./modules/groups/groups.vue"),
     },
     {
-      path: "/groups/:groupID",
+      path: "/groups/:groupID(\\d+)",
       name: "Group",
       component: () => import("./modules/group/group.vue"),
+      // props: {mode: "view"}
     },
-    // {
-    //   path: "/groups/:groupID(\\d+)",
-    //   name: "Group",
-    //   component: () => import("./modules/group/group.vue"),
-    // },
-    // {
-    //   path: "/groups/new",
-    //   name: "Group",
-    //   component: () => import("./modules/group/group.vue"),
-    //   props: {mode: "new"}
-    // },
+    {
+      path: "/groups/:groupID(\\d+)/manage",
+      component: () => import("./modules/groups/pages/editGroup.vue"),
+      props: {mode: "view"}
+    },
+    {
+      path: "/groups/new",
+      component: () => import("./modules/groups/pages/editGroup.vue"),
+      props: {mode: "new"}
+    },
     {
       path: "/groups/:groupID(\\d+)/expense/:id(\\d+)",
       component: () => import("./modules/group/components/editExpense.vue"),
