@@ -15,12 +15,6 @@
   </div>
 </template>
 
-<script>
-import "../colors.css"; // Import colors.css
-export default {
-  name: "NavigationBar",
-};
-</script>
 
 <style scoped>
 .navbar {
@@ -53,6 +47,6 @@ export default {
 }
 
 .active {
-  color: gray;
+  color: rgb(255, 0, 0);
 }
 </style>

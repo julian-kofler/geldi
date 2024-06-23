@@ -2,16 +2,16 @@
 import { onMounted, ref } from "vue";
 import { getBackend } from "@/components/backendHandler";
 import groupCard from "./components/groupCard.vue";
+import { useRouter } from "vue-router";
+import NavigationBar from "@/components/NavigationBar.vue";
+
+const router = useRouter();
 
 const groups = ref([]);
 
 const fetchGroups = async () => {
   const response = await getBackend("/groups");
-  if (response.message === "successful") {
-    groups.value = response.result;
-  } else {
-    //TODO: diplay error msg
-  }
+  groups.value = response.result;
 };
 onMounted(() => {
   fetchGroups();
@@ -20,6 +20,9 @@ onMounted(() => {
 
 <template>
   <h1>Meine Gruppen</h1>
+  <button @click="router.push('/groups/new')" class="btn-primary">
+    + Neue Gruppe
+  </button>
   <div>
     <router-link
       v-for="group in groups"
@@ -32,8 +35,9 @@ onMounted(() => {
         :key="group.id"
         :id="group.id"
         :name="group.name"
-        :completed="group.completed"
+        :completed="group.completed != 0"
       />
     </router-link>
   </div>
+  <NavigationBar></NavigationBar>
 </template>
