@@ -56,4 +56,16 @@ const router = createRouter({
   ],
 });
 
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = localStorage.getItem("jwt") ? true : false;
+
+  if (!isLoggedIn && to.path !== "/signin" && to.path !== "/signup") {
+    next("/signin");
+  } else if (isLoggedIn && (to.path === "/signin" || to.path === "/signup")) {
+    next("/groups");
+  } else {
+    next();
+  }
+});
+
 export default router;
