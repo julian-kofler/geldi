@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import EditExpense from "./editExpense.vue";
+import EditExpense from "../pages/editExpense.vue";
 import type { Expense } from "./types";
 
 const props = defineProps<{

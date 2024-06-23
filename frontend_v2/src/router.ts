@@ -45,12 +45,12 @@ const router = createRouter({
     },
     {
       path: "/groups/:groupID(\\d+)/expense/:id(\\d+)",
-      component: () => import("./modules/group/components/editExpense.vue"),
+      component: () => import("./modules/group/pages/editExpense.vue"),
       props: {mode: "view"}
     },
     {
       path: "/groups/:groupID(\\d+)/expense/new",
-      component: () => import("./modules/group/components/editExpense.vue"),
+      component: () => import("./modules/group/pages/editExpense.vue"),
       props: {mode: "new"}
     },
   ],

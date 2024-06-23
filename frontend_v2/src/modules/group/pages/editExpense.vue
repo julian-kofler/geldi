@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import type { Expense, ExpenseParams } from "./types";
+import type { Expense, ExpenseParams } from "../components/types";
 import { useRoute, useRouter } from "vue-router";
 import { getBackend } from "@/components/backendHandler";
-import selectUser from "./selectUser.vue"
+import selectUser from "../components/selectUser.vue"
 import abort_save_buttons from "@/components/abort_save_buttons.vue";
 
 const route = useRoute();

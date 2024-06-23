@@ -3,9 +3,7 @@ import { onMounted, ref } from "vue";
 import { getBackend } from "@/components/backendHandler";
 import { useRoute, useRouter } from "vue-router";
 import expenseCard from "./components/expenseCard.vue";
-import editExpense from "./components/editExpense.vue";
 import type { Expense } from "./components/types";
-import ExpenseCard from "./components/expenseCard.vue";
 
 const route = useRoute();
 const router = useRouter();
