@@ -36,7 +36,6 @@ const submit = () => {
           name="password"
           id="password"
           v-model="password"
-          placeholder="erstell ein sicheres Passwort"
         />
       </div>
       <button class="btn-primary" type="submit" @click="submit">

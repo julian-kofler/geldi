@@ -86,8 +86,6 @@ export async function signup(
     password: password,
     nickname: nickname,
   };
-  console.log("body", body);
-  console.log("url", url);
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -96,15 +94,17 @@ export async function signup(
       },
       body: JSON.stringify(body),
     });
-
+    
+    const data = await response.json();
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      alert("Fehler! "+ data.message);
+      return;
     }
 
-    const data = await response.json();
     localStorage.setItem("jwt", data.jwt);
     localStorage.setItem("refreshToken", data.refreshToken);
   } catch (error) {
+    alert("Fehler! Keine Verbindung zum Server!");
     console.error(error);
   }
 }
@@ -126,13 +126,15 @@ export async function signin(email: string, password: string) {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      alert("Fehler! Email oder Passwort falsch");
+      return;
     }
 
     const data = await response.json();
     localStorage.setItem("jwt", data.jwt);
     localStorage.setItem("refreshToken", data.refreshToken);
   } catch (error) {
+    alert("Fehler! Keine Verbindung zum Server!");
     console.error(error);
   }
 }
