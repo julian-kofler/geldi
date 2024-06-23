@@ -4,6 +4,7 @@ import { getBackend } from "@/components/backendHandler";
 import { useRoute, useRouter } from "vue-router";
 import expenseCard from "./components/expenseCard.vue";
 import type { Expense } from "./components/types";
+import BottomBar from "./components/bottomBar.vue"
 
 const route = useRoute();
 const router = useRouter();
@@ -58,4 +59,5 @@ onMounted(() => {
       ></expenseCard>
     </div>
   </div>
+  <BottomBar></BottomBar>
 </template>
