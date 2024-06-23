@@ -76,9 +76,8 @@ onMounted(() => {
 <template>
   <TopBar>{{ props.mode === "view" ? expense.title : "Neue Ausgabe" }}</TopBar>
   <div class="content-container with-top-bar">
-    <!-- <h1>Ausgabe:</h1> -->
     <div>
-      <button @click="backToGroups" class="btn-primary">< zurück</button>
+      <!-- <button @click="backToGroups" class="btn-primary">< zurück</button> -->
       <button
         @click="isEdit = true"
         class="btn-secondary"
@@ -88,7 +87,7 @@ onMounted(() => {
       </button>
     </div>
     <div>
-      <div>
+      <div class="input-field">
         <label for="title">Titel</label>
         <input
           v-model="expense.title"
@@ -100,7 +99,7 @@ onMounted(() => {
           autofocus
         />
       </div>
-      <div>
+      <div class="input-field">
         <label for="amount">Preis</label>
         <input
           v-model="expense.amount"
@@ -111,7 +110,7 @@ onMounted(() => {
           :disabled="!isEdit"
         />
       </div>
-      <div>
+      <div class="input-field">
         <label for="date">Datum</label>
         <input
           v-model="expense.timestamp"

@@ -56,21 +56,23 @@ onMounted(() => {
     <h1>
       {{ props.mode === "view" ? name.value || "Loading..." : "Neue Gruppe" }}
     </h1>
-    <div>
+    <div class="input-field">
       <label for="name">Gruppenname</label>
       <input v-model="name" type="text" name="name" id="name" autofocus />
     </div>
-    <div>
+    <div class="input-field">
       <label for="add-member">Mitglied hinzufügen</label>
-      <input
-        v-model="member_to_add"
-        type="email"
-        name="add-member"
-        id="add-member"
-        placeholder="moritz.müller@abc.de"
-        @keyup.enter="add_member_to_list()"
-      />
-      <button @click="add_member_to_list()" type="submit">Hinzufügen</button>
+      <div class="input-and-button">
+        <input
+          v-model="member_to_add"
+          type="email"
+          name="add-member"
+          id="add-member"
+          placeholder="moritz.müller@abc.de"
+          @keyup.enter="add_member_to_list()"
+        />
+        <button @click="add_member_to_list()" class="btn-primary" type="submit">Hinzufügen</button>
+      </div>
     </div>
     <div>
       <p v-for="email in member_emails" class="card">{{ email }}</p>
@@ -78,3 +80,10 @@ onMounted(() => {
     <abortSaveButtons @save="postGroup()"></abortSaveButtons>
   </div>
 </template>
+
+<style scoped>
+.input-and-button{
+  display: flex;
+  gap: 10px;
+}
+</style>
