@@ -51,6 +51,7 @@ export async function postBackend(url: string, body: string): Promise<any> {
   let response = await fetch(backend_url + url, {
     method: "POST",
     headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       "Content-Type": "application/json",
     },
     body: body,
