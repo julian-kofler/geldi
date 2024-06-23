@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { signup } from "@/components/backendHandler.ts";
+import { signup } from "@/components/backendHandler";
 
 const email = ref("");
 const password = ref("");
