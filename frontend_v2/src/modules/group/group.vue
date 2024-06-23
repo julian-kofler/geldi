@@ -54,7 +54,7 @@ onMounted(() => {
       <!-- <h1 class="loading" v-if="!groupDetails">Loading...</h1>
       <h1 v-else>{{ groupDetails.name }}</h1> -->
       <div>
-        <button @click="newExpense" class="btn-primary">+ Neue Ausgabe</button>
+        <button @click="newExpense" class="btn-primary floating-button">+ Neue Ausgabe</button>
         <expenseCard
           v-for="expense in expenses"
           :key="expense.id"

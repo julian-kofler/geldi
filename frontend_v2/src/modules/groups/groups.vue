@@ -20,7 +20,7 @@ onMounted(() => {
 
 <template>
   <h1>Meine Gruppen</h1>
-  <button @click="router.push('/groups/new')" class="btn-primary">
+  <button @click="router.push('/groups/new')" class="btn-primary floating-button">
     + Neue Gruppe
   </button>
   <div>
