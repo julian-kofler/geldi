@@ -74,17 +74,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <TopBar>{{ props.mode === "view" ? expense.title : "Neue Ausgabe" }}</TopBar>
+  <!-- <TopBar>{{ props.mode === "view" ? expense.title : "Neue Ausgabe" }}</TopBar> -->
+  <TopBar>
+    <template #default>{{ props.mode === "view" ? expense.title : "Neue Ausgabe" }} </template>
+    <template #right-side-icon>
+      <div v-if="isEdit == false" @click="isEdit = true">
+        <font-awesome-icon icon="fa-solid fa-pen-to-square" />
+      </div>
+    </template>
+  </TopBar>
   <div class="content-container with-top-bar">
     <div>
-      <!-- <button @click="backToGroups" class="btn-primary">< zurück</button> -->
-      <button
-        @click="isEdit = true"
-        class="btn-secondary"
-        v-if="isEdit == false"
-      >
-        Bearbeiten
-      </button>
     </div>
     <div>
       <div class="input-field">

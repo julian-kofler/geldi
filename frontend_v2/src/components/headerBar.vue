@@ -13,5 +13,8 @@ const goBack = () => {
       <font-awesome-icon icon="fa-solid fa-chevron-left" />
     </div>
     <p><slot>top bar</slot></p>
+    <div>
+       <slot name="right-side-icon"></slot>
+    </div>
   </div>
 </template>
