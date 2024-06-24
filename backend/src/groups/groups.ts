@@ -79,6 +79,30 @@ export class GroupManagement {
     }
   }
 
+  public async getGroup(groupID: number): Promise<{ statusCode: number; result: GroupParams | null }> {
+    try {
+      const sqlQuery = "SELECT * FROM `groups` WHERE id = ?";
+      const [groups] = await this.db.execute<Group[]>(sqlQuery, [groupID]);
+
+      if (groups.length === 0) {
+        return { statusCode: 404, result: null };
+      }
+
+      const sqlQuery2 =
+        "SELECT userId, nickname FROM members_in_groups mig inner join users u on mig.userId = u.id WHERE groupID = ?";
+      const [rows] = await this.db.execute<RowDataPacket[]>(sqlQuery2, [groupID]);
+      // Cast rows to Member[] type
+      const members: String[] = rows as unknown as String[];
+      groups[0].members = members;
+
+      return { statusCode: 200, result: groups[0] as GroupParams };
+    } 
+    catch (error) {
+      logger.error((error as Error).message);
+      return { statusCode: 500, result: null };
+    }
+  }
+
   public async createGroup(group: GroupParams, creator: User): Promise<{ statusCode: number; message: string }> {
     if(!this.isValidGroup(group)) {
       return { statusCode: 400, message: "Invalid input" };
