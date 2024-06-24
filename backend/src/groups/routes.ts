@@ -18,6 +18,12 @@ router.get("/", loginRequired, async (req: RequestWithUser, res: Response) => {
   }
 });
 
+router.get("/group", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: Response) => {
+  const groupID = req.query.groupId as string;
+  const response = await groupMgmt.getGroup(parseInt(groupID));
+  res.status(response.statusCode).json({ result: response.result });
+});
+
 router.post("/", loginRequired, async (req: RequestWithUser, res: Response) => {
   if(userIsDefined(req)){
     const group: GroupParams = req.body;

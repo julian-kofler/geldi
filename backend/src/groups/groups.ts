@@ -48,15 +48,21 @@ export class GroupManagement {
 
   public async getGroups(userID: number): Promise<{ statusCode: number; result: GroupParams[] }> {
     try {
-      const sqlQuery =
-        "SELECT id, name, completed FROM  `groups` as g inner join members_in_groups as mg on g.id = mg.groupID where userID = ?";
+      const sqlQuery = `SELECT g.id, g.name, g.completed
+        FROM \`groups\` g
+        INNER JOIN members_in_groups mig ON g.id = mig.groupId
+        LEFT JOIN (SELECT MAX(timestamp) as maxTimestamp, groupId from expenses e GROUP BY groupId)
+        AS sub ON g.id = sub.groupId
+        WHERE mig.userId = ?
+        ORDER BY sub.maxTimestamp DESC;`;
       const [groups] = await this.db.execute<Group[]>(sqlQuery, [userID]);
   
+      console.log(groups);
       const result: GroupParams[] = [];
   
       for (let group of groups) {
         const sqlQuery2 =
-          "SELECT userId, nickname FROM members_in_groups as mig inner join users as u on mig.userId = u.id WHERE groupID = ?";
+          "SELECT userId, nickname FROM members_in_groups mig inner join users u on mig.userId = u.id WHERE groupID = ?";
         const [rows] = await this.db.execute<RowDataPacket[]>(sqlQuery2, [group.id]);
         // Cast rows to Member[] type
         const members: String[] = rows as unknown as String[];
@@ -70,6 +76,30 @@ export class GroupManagement {
     catch (error) {
       logger.error((error as Error).message);
       return { statusCode: 500, result: [] };
+    }
+  }
+
+  public async getGroup(groupID: number): Promise<{ statusCode: number; result: GroupParams | null }> {
+    try {
+      const sqlQuery = "SELECT * FROM `groups` WHERE id = ?";
+      const [groups] = await this.db.execute<Group[]>(sqlQuery, [groupID]);
+
+      if (groups.length === 0) {
+        return { statusCode: 404, result: null };
+      }
+
+      const sqlQuery2 =
+        "SELECT userId, nickname FROM members_in_groups mig inner join users u on mig.userId = u.id WHERE groupID = ?";
+      const [rows] = await this.db.execute<RowDataPacket[]>(sqlQuery2, [groupID]);
+      // Cast rows to Member[] type
+      const members: String[] = rows as unknown as String[];
+      groups[0].members = members;
+
+      return { statusCode: 200, result: groups[0] as GroupParams };
+    } 
+    catch (error) {
+      logger.error((error as Error).message);
+      return { statusCode: 500, result: null };
     }
   }
 
