@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { signup } from "@/components/backendHandler.ts";
+import { signup } from "@/components/backendHandler";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const email = ref("");
 const password = ref("");
 const nickname = ref("");
 
-const submit = () => {
-  signup(email.value, password.value, nickname.value);
+const submit = async() => {
+  await signup(email.value, password.value, nickname.value);
+  router.push("/groups");
 };
 </script>
 

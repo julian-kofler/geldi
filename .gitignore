@@ -3,5 +3,6 @@
 build/
 node_modules/
 build/
+frontend/src/assets/geldi.svg:Zone.Identifier
 logs/
 ausgabenverwaltung.code-workspace

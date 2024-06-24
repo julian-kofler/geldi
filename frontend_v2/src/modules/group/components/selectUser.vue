@@ -1,45 +1,38 @@
+<script setup lang="ts">
+
+const props = defineProps(["users", "edit"]);
+const selected = defineModel("selected", { required: true });
+
+const toggleSelect = (id: number) => {
+  if (props.edit === false) return;
+  if (!isSelected(id)) {
+    selected.value.push(id);
+  } else {
+    selected.value = selected.value.filter((selectedId) => selectedId !== id);
+  }
+};
+const isSelected = (id: number) => {
+  return selected.value.some((user) => user === id);
+};
+</script>
+
 <template>
   <div class="user-select-container">
     <ul class="user-list">
       <li
-        v-for="user in users"
-        :key="user.userId"
-        @click="selectUser(user)"
-        :class="{ 'selected': isSelected(user), 'unselected': !isSelected(user) }"
+        v-for="user in props.users"
+        :key="user.id"
+        @click="toggleSelect(user.id)"
+        :class="{
+          selected: isSelected(user.id),
+          unselected: !isSelected(user.id),
+        }"
       >
-        {{ user.nickname || 'Loading...'}}
+        {{ user.nickname }}
       </li>
     </ul>
   </div>
 </template>
-
-<script setup>
-import { ref, reactive, toRefs, watchEffect, provide, inject, onMounted } from "vue";
-import { defineProps } from "vue";
-
-const props = defineProps({
-  users: Array,
-  multiple: Boolean,
-});
-
-const selectedUsers = inject("selectedUsers") || ref([]);
-
-const selectUser = (user) => {
-  if (props.multiple) {
-    const index = selectedUsers.value.findIndex((u) => u.userId === user.userId);
-    if (index > -1) {
-      selectedUsers.value.splice(index, 1); // Deselect if already selected
-    } else {
-      selectedUsers.value.push(user); // Select if not already selected
-    }
-  } else {
-    selectedUsers.value = [user]; // Replace the selected user if not multiple
-  }
-};
-const isSelected = (user) => {
-  return selectedUsers.value.some(selectedUser => selectedUser.userId === user.userId);
-};
-</script>
 
 <style scoped>
 .unselected {
@@ -48,7 +41,7 @@ const isSelected = (user) => {
   padding: 10px 15px; /* Consistent padding with selected users */
   margin: 5px 0; /* Consistent margin with selected users */
   border-radius: 5px; /* Rounded corners for a modern look */
-  
+
   transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition for hover */
 }
 
@@ -59,7 +52,7 @@ const isSelected = (user) => {
 
 /* Existing styles for .selected and other elements */
 .selected {
-  background-color: #007BFF; /* A more vibrant blue */
+  background-color: #007bff; /* A more vibrant blue */
   color: white; /* White text for better contrast */
   padding: 10px 15px; /* Increased padding for a better visual structure */
   margin: 5px 0; /* Adds space between items */

@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import {signin} from "@/components/backendHandler.ts";
+import { useRouter } from "vue-router";
+import {signin} from "@/components/backendHandler";
+
+const router = useRouter();
 
 const email = ref("");
 const password = ref("");
 
-const submit = () => {
-  signin(email.value, password.value);
+const submit = async () => {
+  await signin(email.value, password.value);
+  router.push("/groups");
 };
 </script>
 
@@ -32,7 +36,6 @@ const submit = () => {
           name="password"
           id="password"
           v-model="password"
-          placeholder="erstell ein sicheres Passwort"
         />
       </div>
       <button class="btn-primary" type="submit" @click="submit">
