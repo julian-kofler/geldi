@@ -1,7 +1,9 @@
 import mysql from "mysql2/promise";
+import { RowDataPacket } from "mysql2/promise";
 
 import { Expense, ExpenseParams } from "./types";
 import { logger } from "../middleware/global.js"
+import exp from "constants";
 
 export class ExpenseManagement {
   private db: mysql.Connection;
@@ -74,15 +76,54 @@ export class ExpenseManagement {
     return { statusCode: 200, message: "Expense edited successfully" };
   }
 
-  public async getExpenses(groupId: number): Promise<{ statusCode: number; result: Expense[] }> {
+  public async getExpenses(groupId: number): Promise<{ statusCode: number; result: ExpenseParams[] }> {
     try {
-      console.log("GroupID: " + groupId);
+      let expensesWithPayedFor: ExpenseParams[] = [];
+
       const sql = "SELECT * FROM expenses WHERE groupId = ?";
       const [expenses] = await this.db.execute<Expense[]>(sql, [groupId]);
-      return { statusCode: 200, result: expenses };
-    } catch (error) {
+
+      for (const expense of expenses) {
+        const sql2 = "SELECT userID FROM payed_for WHERE expenseID = ?";
+        const [payedFor] = await this.db.execute<RowDataPacket[]>(sql2, [expense.id]);
+        
+        let expenseParams: ExpenseParams = {
+          ...expense,
+          payedFor: payedFor.map((row) => row.userID),
+        };
+        expensesWithPayedFor.push(expenseParams);
+      }
+      return { statusCode: 200, result: expensesWithPayedFor };
+    } 
+    catch (error) {
       logger.error((error as Error).message)
       return { statusCode: 500, result: [] };
+    }
+  }
+
+  public async getExpense(expenseID: number): Promise<{ statusCode: number; result: ExpenseParams | null }> {
+    try {
+      if (expenseID === undefined) {
+        return { statusCode: 400, result: null }; // Bad Request if expenseID is undefined
+      }
+      let expenseParams: ExpenseParams;
+
+      const sql = "SELECT * FROM expenses WHERE id = ?";
+      const [expenses] = await this.db.execute<Expense[]>(sql, [expenseID]);
+
+      const sql2 = "SELECT userID FROM payed_for WHERE expenseID = ?";
+      const [payedFor] = await this.db.execute<RowDataPacket[]>(sql2, [expenseID]);
+        
+      expenseParams = {
+        ...expenses[0],
+        payedFor: payedFor.map((row) => row.userID),
+      };
+      
+      return { statusCode: 200, result: expenseParams };
+    } 
+    catch (error) {
+      logger.error((error as Error).message)
+      return { statusCode: 500, result: null };
     }
   }
 

@@ -44,7 +44,8 @@ async function createTables(connection: mysql.Connection): Promise<void> {
         CREATE TABLE IF NOT EXISTS validRefreshTokens(
             token VARCHAR(255) PRIMARY KEY NOT NULL,
             userId INT NOT NULL UNIQUE,
-            expirationTime TIMESTAMP NOT NULL
+            expirationTime TIMESTAMP NOT NULL,
+            CONSTRAINT fk_refreshUserId FOREIGN KEY (userId) REFERENCES users(id)
         );
     `);
 

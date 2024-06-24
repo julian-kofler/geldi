@@ -17,6 +17,12 @@ router.get("/", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: 
     res.status(response.statusCode).json({ result: response.result });
 });
 
+router.get("/expense", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: Response) => {
+    const expenseId = req.query.expenseId as string;
+    const response = await expenseMgmnt.getExpense(parseInt(expenseId));
+    res.status(response.statusCode).json({ result: response.result });
+});
+
 router.post("/", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: Response) => {
     const expense: ExpenseParams = req.body;
     const response = await expenseMgmnt.createExpense(expense);

@@ -34,6 +34,12 @@ export async function UserIsInGroup(req: RequestWithUser, res: Response, next: N
     }
     const userID = req.user.id;
 
+    if(!groupId){
+      logger.warn("No groupID provided. Necessary for checking if user is in group.");
+      res.status(400).json({ message: "No groupID provided" });
+      return;
+    }
+
     try{
       const sql = 'SELECT * FROM members_in_groups WHERE userId = ? AND groupId = ?';
       const values = [userID, groupId];
