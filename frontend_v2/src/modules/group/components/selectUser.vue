@@ -56,6 +56,7 @@ const isSelected = (id: number) => {
   flex-direction: row;
   justify-content: space-around;
   padding: 0;
+  align-content: flex-start;
 }
 .selected{
   border-color: var(--coloraccent);
@@ -64,9 +65,6 @@ const isSelected = (id: number) => {
 .user-list li {
   display: inline-block;
 }
-.user-select-container{
-  width: 100%;
-  flex-wrap: wrap;
-}
+
 
 </style>

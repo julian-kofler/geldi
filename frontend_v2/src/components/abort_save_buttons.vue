@@ -8,3 +8,18 @@
       </button>
     </div>
 </template>
+
+<style scoped>
+.button-abort-save {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  gap: 12px;
+}
+.btn-secondary{
+  flex-grow: 0;
+}
+.btn-primary{
+  flex-grow: 2;
+}
+</style>

@@ -100,5 +100,9 @@ onMounted(() => {
 .input-and-button{
   display: flex;
   gap: 10px;
+  justify-content: center;
+}
+.icon-button{
+  padding:10px;
 }
 </style>
