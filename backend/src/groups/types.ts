@@ -12,3 +12,15 @@ export interface GroupParams {
   completed?: number;
   memberEmails: string[];
 }
+
+export interface GroupMember {
+  id: number;
+  nickname: string;
+}
+
+export interface GroupResponse {
+  id: number;
+  name: string;
+  completed: number;
+  members: GroupMember[];
+}
