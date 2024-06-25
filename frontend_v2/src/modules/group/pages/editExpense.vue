@@ -105,8 +105,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- <TopBar>{{ props.mode === "view" ? expense.title : "Neue Ausgabe" }}</TopBar> -->
-  <TopBar>
+  <TopBar :back_route="`/groups/${route.params.groupID}`">
     <template #default
       >{{ props.mode === "view" ? expense.title : "Neue Ausgabe" }}
     </template>

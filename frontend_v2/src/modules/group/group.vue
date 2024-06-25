@@ -40,6 +40,9 @@ const newExpense = () => {
 const viewExpense = (expID: number) => {
   router.push(`/groups/${groupDetails.value.id}/expense/${expID}`);
 };
+const headerTitleClicked = () => {
+  router.push(`/groups/${route.params.groupID}/manage`);
+}
 onMounted(() => {
   fetchGroupDetails();
   fetchExpenses();
@@ -49,10 +52,11 @@ onMounted(() => {
 <template>
   <div>
     <TopBar v-if="!groupDetails">Loading...</TopBar>
-    <TopBar v-else>{{ groupDetails.name  }}</TopBar>
+    <TopBar @headerTitleClicked="headerTitleClicked" v-else>{{ groupDetails.name  }}</TopBar>
     <div class="content-container with-top-bar with-bottom-bar">
       <!-- <h1 class="loading" v-if="!groupDetails">Loading...</h1>
       <h1 v-else>{{ groupDetails.name }}</h1> -->
+      <button class="btn-secondary">Ausgleichszahlungen</button>
       <div>
         <button @click="newExpense" class="btn-primary floating-button">+ Neue Ausgabe</button>
         <expenseCard
