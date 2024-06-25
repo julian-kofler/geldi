@@ -10,7 +10,7 @@ export interface ExpenseParams {
   groupId?: number;
   title: string;
   amount: number;
-  timestamp: Date;
+  timestamp: string;
   payedBy: number;
   payedFor: number[];
   tagId?: number;

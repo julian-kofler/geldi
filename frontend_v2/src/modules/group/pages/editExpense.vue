@@ -2,8 +2,12 @@
 import { onMounted, ref } from "vue";
 import type { Expense, ExpenseParams } from "../components/types";
 import { useRoute, useRouter } from "vue-router";
-import { getBackend } from "@/components/backendHandler";
-import selectUser from "../components/selectUser.vue"
+import {
+  backend_url,
+  getBackend,
+  postBackend,
+} from "@/components/backendHandler";
+import selectUser from "../components/selectUser.vue";
 import abort_save_buttons from "@/components/abort_save_buttons.vue";
 import TopBar from "@/components/headerBar.vue";
 
@@ -16,9 +20,9 @@ const props = defineProps({
 const original_expense = ref<ExpenseParams>();
 const expense = ref<ExpenseParams>({
   id: 0,
-  title: "Loading...",
+  title: "",
   amount: 0.0,
-  timestamp: new Date(),
+  timestamp: new Date().toISOString().split('T')[0],
   payedBy: 0,
   payedFor: [],
 });
@@ -26,8 +30,14 @@ const group_members = ref([]);
 
 const isEdit = ref(props.mode === "view" ? false : true);
 
-const fetchExpense = () => {};
-const fetchPayedfor = () => {};
+const fetchExpense = async () => {
+  console.log("fetch expense aufgerufen");
+  const url = `/expenses/expense?expenseId=${route.params.expenseID}&groupId=${route.params.groupID}`;
+  const data = await getBackend(url);
+  data.result.timestamp = data.result.timestamp.split('T')[0];
+  expense.value = data.result;
+  original_expense.value = JSON.parse(JSON.stringify(data.result));//deep copy
+};
 const fetchGroupMembers = async () => {
   const res = await getBackend("/groups");
   group_members.value = res.result
@@ -37,12 +47,26 @@ const fetchGroupMembers = async () => {
       nickname: member.nickname,
     }));
   if (props.mode === "new") {
-    expense.value.payedFor = group_members.value.map((member) => (member.id)); 
+    expense.value.payedFor = group_members.value.map((member) => member.id);
   }
   console.log("expense: ", expense.value);
 };
 const postExpense = async () => {
-  backToGroups();
+  const body = {
+    groupId: route.params.groupID,
+    title: expense.value.title,
+    amount: expense.value.amount,
+    timestamp: expense.value.timestamp,
+    payedBy: expense.value.payedBy,
+    payedFor: expense.value.payedFor,
+  };
+  try {
+    const res = postBackend("/expenses", JSON.stringify(body));
+    backToGroups();
+  } catch (error) {
+    alert("Error: "+ error)
+  }
+  
 };
 const updateExpense = async () => {
   backToGroups();
@@ -55,10 +79,12 @@ const abort = () => {
   if (props.mode === "new") {
     backToGroups();
   }
+  // router.go(0);
+  expense.value = JSON.parse(JSON.stringify(original_expense.value));//deep copy
 };
 const saveExpense = async () => {
   isEdit.value = false;
-  if (props.mode === "new") {
+  if (props.mode == "new") {
     postExpense();
   } else {
     //mode === "view" ==> edited existing expense
@@ -68,15 +94,22 @@ const saveExpense = async () => {
 onMounted(() => {
   console.log("edit expense aufgerufen");
   fetchGroupMembers();
-  //TODO: fetch expense
-  //TODO: fetch payedfor
+  if (props.mode == "view") {
+    fetchExpense();
+  }
+  else{
+    // expense.value.title = "";
+  }
 });
+
 </script>
 
 <template>
   <!-- <TopBar>{{ props.mode === "view" ? expense.title : "Neue Ausgabe" }}</TopBar> -->
   <TopBar>
-    <template #default>{{ props.mode === "view" ? expense.title : "Neue Ausgabe" }} </template>
+    <template #default
+      >{{ props.mode === "view" ? expense.title : "Neue Ausgabe" }}
+    </template>
     <template #right-side-icon>
       <div v-if="isEdit == false" @click="isEdit = true">
         <font-awesome-icon icon="fa-solid fa-pen-to-square" />
@@ -84,8 +117,7 @@ onMounted(() => {
     </template>
   </TopBar>
   <div class="content-container with-top-bar">
-    <div>
-    </div>
+    <div></div>
     <div>
       <div class="input-field">
         <label for="title">Titel</label>
@@ -121,11 +153,11 @@ onMounted(() => {
           :disabled="!isEdit"
         />
       </div>
-      <div>
+      <div class="input-field">
         <label for="payedby">Bezahlt von</label>
         <select
           v-model="expense.payedBy"
-          class="styled-select"
+          class="like-input"
           :disabled="!isEdit"
         >
           <option disabled value="0">Please select one</option>
@@ -140,11 +172,18 @@ onMounted(() => {
       </div>
       <div>
         <label for="payedfor">Bezahlt für</label>
-        <selectUser v-model:selected="expense.payedFor" :edit="isEdit" :users="group_members"></selectUser>
+        <selectUser
+          v-model:selected="expense.payedFor"
+          :edit="isEdit"
+          :users="group_members"
+        ></selectUser>
       </div>
     </div>
     <div v-if="isEdit == true">
-      <abort_save_buttons @abort="abort()" @save="saveExpense()"></abort_save_buttons>
+      <abort_save_buttons
+        @abort="abort()"
+        @save="saveExpense()"
+      ></abort_save_buttons>
     </div>
   </div>
 </template>
