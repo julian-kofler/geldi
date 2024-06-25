@@ -53,7 +53,7 @@ onMounted(() => {
 
 <template>
   <!-- <TopBar>{{ props.mode === "view" ? name : "Neue Gruppe" }}</TopBar> -->
-  <TopBar>
+  <TopBar :back_route="`/groups/${route.params.groupID}`">
     <template #default>{{ props.mode === "view" ? name : "Neue Gruppe" }} </template>
     <template #right-side-icon>
       <div v-if="isEdit == false" @click="isEdit = true">
@@ -86,11 +86,8 @@ onMounted(() => {
     </div>
     <label for="add-member">Mitglieder:</label>
     <div v-for="email in member_emails" class="input-and-button">
-      <!-- <p v-for="email in member_emails" class="card">{{ email }}</p> -->
       <div class="like-input">{{ email }}</div>
-      <!-- <button class="btn-secondary">entfernen</button> -->
       <button v-if="isEdit == true" class="btn-secondary"><font-awesome-icon icon="fa-solid fa-trash" /></button>
-      <!-- <font-awesome-icon icon="fa-solid fa-circle-minus" /> -->
     </div>
     <abortSaveButtons v-if="isEdit == true" @save="postGroup()" @abort="isEdit=false"></abortSaveButtons>
   </div>
