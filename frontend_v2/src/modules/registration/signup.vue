@@ -9,7 +9,7 @@ const email = ref("");
 const password = ref("");
 const nickname = ref("");
 
-const submit = async() => {
+const submit = async () => {
   await signup(email.value, password.value, nickname.value);
   router.push("/groups");
 };
