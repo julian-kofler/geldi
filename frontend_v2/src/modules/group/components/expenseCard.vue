@@ -1,32 +1,33 @@
 <script setup lang="ts">
-import EditExpense from "../pages/editExpense.vue";
-import type { Expense } from "./types";
-
 const props = defineProps<{
-  expense: Expense,
-}>()
+  id: number;
+  title: string;
+  amount: number;
+  payedby: string;
+  date: string;
+}>();
 </script>
 
 <template>
-  <div @click="$emit('editExpense', props.expense.id)" class="card">
+  <div @click="$emit('editExpense', props.id)" class="card">
     <div class="title-and-amount">
-        <p>{{ props.expense.title }}</p>
-        <p>{{ props.expense.amount }}€</p>
+      <p>{{ props.title }}</p>
+      <p>{{ props.amount }}€</p>
     </div>
     <div class="payedby-and-date">
-        <p>Bezahlt von: {{ props.expense.payedby }}</p>
-        <p>{{ props.expense.date }}</p>
+      <p>Bezahlt von: {{ props.payedby }}</p>
+      <p>{{ props.date }}</p>
     </div>
   </div>
 </template>
 
 <style scoped>
-.title-and-amount{
-    display: flex;
-    justify-content: space-between;
+.title-and-amount {
+  display: flex;
+  justify-content: space-between;
 }
-.payedby-and-date{
-    display: flex;
-    justify-content: space-between;
+.payedby-and-date {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

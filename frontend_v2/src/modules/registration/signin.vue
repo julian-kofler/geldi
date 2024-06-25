@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import {signin} from "@/components/backendHandler";
+import { signin } from "@/components/backendHandler";
 
 const router = useRouter();
 
@@ -42,6 +42,8 @@ const submit = async () => {
         Einloggen
       </button>
     </div>
-    <router-link to="/signup">Noch keinen Account? Hier registrieren!</router-link>
+    <router-link to="/signup"
+      >Noch keinen Account? Hier registrieren!</router-link
+    >
   </div>
 </template>

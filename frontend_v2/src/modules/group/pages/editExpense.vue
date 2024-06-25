@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import type { Expense, ExpenseParams } from "../components/types";
+import type {
+  ExpenseParams,
+  GroupMember,
+  GroupResponse,
+} from "@/components/types";
 import { useRoute, useRouter } from "vue-router";
 import {
-  backend_url,
   getBackend,
   postBackend,
   getMyUserID,
@@ -20,14 +23,19 @@ const props = defineProps({
 });
 const original_expense = ref<ExpenseParams>();
 const expense = ref<ExpenseParams>({
-  id: 0,
+  groupId: parseInt(route.params.groupID as string),
   title: "",
   amount: 0.0,
-  timestamp: new Date().toISOString().split('T')[0],
+  timestamp: new Date().toISOString(),
   payedBy: getMyUserID(),
   payedFor: [],
 });
-const group_members = ref([]);
+
+const groupInfo = ref<GroupResponse>();
+const fetchGroupInfo = async () => {
+  const res = await getBackend(`/groups/group?groupId=${route.params.groupID}`);
+  groupInfo.value = res.result;
+};
 
 const isEdit = ref(props.mode === "view" ? false : true);
 
@@ -35,39 +43,17 @@ const fetchExpense = async () => {
   console.log("fetch expense aufgerufen");
   const url = `/expenses/expense?expenseId=${route.params.expenseID}&groupId=${route.params.groupID}`;
   const data = await getBackend(url);
-  data.result.timestamp = data.result.timestamp.split('T')[0];
+  data.result.timestamp = data.result.timestamp.split("T")[0];
   expense.value = data.result;
-  original_expense.value = JSON.parse(JSON.stringify(data.result));//deep copy
-};
-const fetchGroupMembers = async () => {
-  const res = await getBackend("/groups");
-  group_members.value = res.result
-    .find((group) => group.id === parseInt(route.params.groupID))
-    .members.map((member) => ({
-      id: member.userId,
-      nickname: member.nickname,
-    }));
-  if (props.mode === "new") {
-    expense.value.payedFor = group_members.value.map((member) => member.id);
-  }
-  console.log("expense: ", expense.value);
+  original_expense.value = JSON.parse(JSON.stringify(data.result)); //deep copy
 };
 const postExpense = async () => {
-  const body = {
-    groupId: route.params.groupID,
-    title: expense.value.title,
-    amount: expense.value.amount,
-    timestamp: expense.value.timestamp,
-    payedBy: expense.value.payedBy,
-    payedFor: expense.value.payedFor,
-  };
   try {
-    const res = postBackend("/expenses", JSON.stringify(body));
+    const res = postBackend("/expenses", JSON.stringify(expense.value));
     backToGroups();
   } catch (error) {
-    alert("Error: "+ error)
+    alert("Error: " + error);
   }
-  
 };
 const updateExpense = async () => {
   backToGroups();
@@ -80,25 +66,23 @@ const abort = () => {
   if (props.mode === "new") {
     backToGroups();
   }
-  // router.go(0);
-  expense.value = JSON.parse(JSON.stringify(original_expense.value));//deep copy
+  expense.value = JSON.parse(JSON.stringify(original_expense.value)); //deep copy
 };
 const saveExpense = async () => {
   isEdit.value = false;
   if (props.mode == "new") {
     postExpense();
-  } else if( props.mode == "view"){
+  } else if (props.mode == "view") {
     updateExpense();
   }
 };
 onMounted(() => {
   console.log("edit expense aufgerufen");
-  fetchGroupMembers();
+  fetchGroupInfo();
   if (props.mode == "view") {
     fetchExpense();
   }
 });
-
 </script>
 
 <template>
@@ -158,9 +142,9 @@ onMounted(() => {
         >
           <option disabled value="0">Please select one</option>
           <option
-            v-for="member in group_members"
-            :key="member.id"
-            :value="member.id"
+            v-for="member in groupInfo?.members"
+            :key="member.userId"
+            :value="member.userId"
           >
             {{ member.nickname }}
           </option>
@@ -171,7 +155,7 @@ onMounted(() => {
         <selectUser
           v-model:selected="expense.payedFor"
           :edit="isEdit"
-          :users="group_members"
+          :users="groupInfo?.members as GroupMember[]"
         ></selectUser>
       </div>
     </div>
