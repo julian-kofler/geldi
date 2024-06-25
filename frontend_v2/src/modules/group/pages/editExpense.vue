@@ -26,7 +26,7 @@ const expense = ref<ExpenseParams>({
   groupId: parseInt(route.params.groupID as string),
   title: "",
   amount: 0.0,
-  timestamp: new Date().toISOString().split("T")[0],
+  timestamp: new Date().toISOString(),
   payedBy: getMyUserID(),
   payedFor: [],
 });
