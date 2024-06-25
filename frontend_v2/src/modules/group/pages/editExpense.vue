@@ -6,6 +6,7 @@ import {
   backend_url,
   getBackend,
   postBackend,
+  getMyUserID,
 } from "@/components/backendHandler";
 import selectUser from "../components/selectUser.vue";
 import abort_save_buttons from "@/components/abort_save_buttons.vue";
@@ -23,7 +24,7 @@ const expense = ref<ExpenseParams>({
   title: "",
   amount: 0.0,
   timestamp: new Date().toISOString().split('T')[0],
-  payedBy: 0,
+  payedBy: getMyUserID(),
   payedFor: [],
 });
 const group_members = ref([]);
@@ -86,8 +87,7 @@ const saveExpense = async () => {
   isEdit.value = false;
   if (props.mode == "new") {
     postExpense();
-  } else {
-    //mode === "view" ==> edited existing expense
+  } else if( props.mode == "view"){
     updateExpense();
   }
 };
@@ -96,9 +96,6 @@ onMounted(() => {
   fetchGroupMembers();
   if (props.mode == "view") {
     fetchExpense();
-  }
-  else{
-    // expense.value.title = "";
   }
 });
 

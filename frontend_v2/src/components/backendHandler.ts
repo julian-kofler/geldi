@@ -1,6 +1,6 @@
 export const backend_url = "http://localhost:5000/api";
 
-const refreshjwtToken = async () : Promise<boolean> => {
+const refreshjwtToken = async (): Promise<boolean> => {
   const response = await fetch(backend_url + "/auth/refreshJWT", {
     method: "POST",
     headers: {
@@ -33,12 +33,10 @@ export async function getBackend(url: string): Promise<any> {
   const data = await response.json();
   if (!response.ok) {
     if (data.message != "Token expired") {
-      console.error(
-        "Failed to fetch",
-        response.status,
-        response.statusText
+      console.error("Failed to fetch", response.status, response.statusText);
+      throw new Error(
+        `Failed to fetch, ${response.status}, ${response.statusText}`
       );
-      throw new Error(`Failed to fetch, ${response.status}, ${response.statusText}`);
     }
     const refreshed = await refreshjwtToken();
     if (refreshed) {
@@ -60,12 +58,10 @@ export async function postBackend(url: string, body: string): Promise<any> {
   const data = await response.json();
   if (!response.ok) {
     if (data.message != "Token expired") {
-      console.error(
-        "Failed to fetch",
-        response.status,
-        response.statusText
+      console.error("Failed to fetch", response.status, response.statusText);
+      throw new Error(
+        `Failed to fetch, ${response.status}, ${response.statusText}`
       );
-      throw new Error(`Failed to fetch, ${response.status}, ${response.statusText}`);
     }
     const refreshed = await refreshjwtToken();
     if (refreshed) {
@@ -94,10 +90,10 @@ export async function signup(
       },
       body: JSON.stringify(body),
     });
-    
+
     const data = await response.json();
     if (!response.ok) {
-      alert("Fehler! "+ data.message);
+      alert("Fehler! " + data.message);
       return;
     }
 
@@ -137,4 +133,31 @@ export async function signin(email: string, password: string) {
     alert("Fehler! Keine Verbindung zum Server!");
     console.error(error);
   }
+}
+function getUserIdFromJWT(token: string): string | null {
+  try {
+    // Split the token into parts
+    const parts = token.split(".");
+    if (parts.length !== 3) {
+      throw new Error("The token is invalid");
+    }
+
+    // Decode the payload
+    const payload = parts[1];
+    const decodedPayload = atob(payload.replace(/_/g, "/").replace(/-/g, "+"));
+
+    // Parse the payload
+    const payloadObj = JSON.parse(decodedPayload);
+
+    // Extract the userId (assuming it's stored as 'userId' in the token payload)
+    const userId = payloadObj.userId;
+
+    return userId;
+  } catch (error) {
+    console.error("Failed to decode JWT:", error);
+    return null;
+  }
+}
+export function getMyUserID(): number {
+  return parseInt(getUserIdFromJWT(localStorage.getItem("jwt")));
 }
