@@ -21,7 +21,7 @@ export interface GroupParams {
     groupId: number;
     title: string;
     amount: number;//backend returns amount as string on GET /expenses
-    timestamp: string; //date in ISO format
+    timestamp: string; //in backend type: Date ,   but returns date as string in ISO format
     payedBy: number;
     payedFor: number[];
     tagId?: number;

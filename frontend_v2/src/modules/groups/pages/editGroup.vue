@@ -150,6 +150,7 @@ onMounted(() => {
   display: flex;
   gap: 10px;
   justify-content: center;
+  margin-bottom: 10px;
 }
 .icon-button {
   padding: 10px;

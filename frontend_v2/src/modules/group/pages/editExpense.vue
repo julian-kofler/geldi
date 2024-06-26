@@ -9,6 +9,7 @@ import { useRoute, useRouter } from "vue-router";
 import {
   getBackend,
   postBackend,
+  putBackend,
   getMyUserID,
 } from "@/components/backendHandler";
 import selectUser from "../components/selectUser.vue";
@@ -40,7 +41,6 @@ const fetchGroupInfo = async () => {
 const isEdit = ref(props.mode === "view" ? false : true);
 
 const fetchExpense = async () => {
-  console.log("fetch expense aufgerufen");
   const url = `/expenses/expense?expenseId=${route.params.expenseID}&groupId=${route.params.groupID}`;
   const data = await getBackend(url);
   data.result.timestamp = data.result.timestamp.split("T")[0];
@@ -56,7 +56,12 @@ const postExpense = async () => {
   }
 };
 const updateExpense = async () => {
-  backToGroups();
+  try {
+    const res = putBackend("/expenses", JSON.stringify(expense.value));
+    backToGroups();
+  } catch (error) {
+    alert("Error: " + error);
+  }
 };
 const backToGroups = () => {
   router.push(`/groups/${route.params.groupID}`);
@@ -77,7 +82,6 @@ const saveExpense = async () => {
   }
 };
 onMounted(() => {
-  console.log("edit expense aufgerufen");
   fetchGroupInfo();
   if (props.mode == "view") {
     fetchExpense();

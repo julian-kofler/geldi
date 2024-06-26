@@ -38,7 +38,6 @@ const toCompensationPayments = () => {
   router.push(`/groups/${route.params.groupID}/compensation-payments`);
 };
 const nickname = (userID: number): string => {
-  console.log("members", groupInfo.value?.members);
   return (
     groupInfo.value?.members.find((member) => member.userId == userID)
       ?.nickname ?? "userID=" + userID
