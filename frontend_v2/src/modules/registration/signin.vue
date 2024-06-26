@@ -15,7 +15,7 @@ const submit = async () => {
 </script>
 
 <template>
-  <div>
+  <div class="content-container">
     <h1>Ausgabenverwaltung</h1>
     <p>Ausgaben besser aufteilen!</p>
     <div>

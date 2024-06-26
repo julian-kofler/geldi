@@ -1,5 +1,4 @@
-# Geldi
-
+# Setup
 ## Requirements
 
 - MySQL
@@ -15,6 +14,6 @@
 
 ## Frondend Setup
 
-1. ```cd ./frontend``` Change to the frontend folder
+1. ```cd ./frontend_v2``` Change to the frontend folder
 2. ```npm install``` Install the necessary dependencies
 3. ```npm run dev``` Start the server in a development environment

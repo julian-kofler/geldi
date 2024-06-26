@@ -16,7 +16,7 @@ const submit = async () => {
 </script>
 
 <template>
-  <div>
+  <div class="content-container">
     <h1>Account erstellen</h1>
     <div>
       <div class="input-field">
