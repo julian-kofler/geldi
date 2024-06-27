@@ -60,7 +60,8 @@ export class ExpenseManagement {
 
     try {
       const sql = "UPDATE expenses SET groupId = ?, title = ?, amount = ?, timestamp = ?, payedBy = ?, tagId = ?, picPath = ? WHERE id = ?";
-      const values = [expense.groupId, expense.title, expense.amount, expense.timestamp, expense.payedBy, expense.tagId, expense.picPath, expense.id];
+      const date = new Date(expense.timestamp);
+      const values = [expense.groupId, expense.title, expense.amount, date, expense.payedBy, expense.tagId, expense.picPath, expense.id];
       await this.db.execute<mysql.OkPacket>(sql, values);
 
       const sql2 = "DELETE FROM payed_for WHERE expenseID = ?";
