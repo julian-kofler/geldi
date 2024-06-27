@@ -24,7 +24,7 @@ const isSelected = (id: number) => {
 <template>
   <div class="user-select-container">
     <ul class="user-list">
-      <li
+      <div
         v-for="user in props.users"
         :key="user.userId"
         @click="toggleSelect(user.userId)"
@@ -34,7 +34,7 @@ const isSelected = (id: number) => {
         }"
       >
         {{ user.nickname }}
-      </li>
+      </div>
     </ul>
   </div>
 </template>
@@ -48,15 +48,15 @@ const isSelected = (id: number) => {
   outline: none;
   width: fit-content;
 
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   box-sizing: border-box;
 
-  color: rgb(119, 119, 119);
+  color: rgb(157, 157, 157);
 }
 .user-list {
   list-style-type: none;
   flex-wrap: wrap;
-  display: flex;
+  display: flex;  
   flex-direction: row;
   justify-content: space-around;
   padding: 0;
@@ -65,6 +65,8 @@ const isSelected = (id: number) => {
 .selected {
   border-color: var(--coloraccent);
   color: black;
+  background-color: rgba(255, 255, 255, 0);
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.452)
 }
 .user-list li {
   display: inline-block;
