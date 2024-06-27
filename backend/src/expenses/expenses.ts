@@ -155,10 +155,10 @@ export class ExpenseManagement {
         return { statusCode: 500, result: 0 };
       }
       const expenses = res.result
-      let total_cost = 0;
 
+      let total_cost = 0;
       for(const expense of expenses){
-        total_cost += parseInt(expense.amount as unknown as string);
+        total_cost += parseFloat(expense.amount as unknown as string);
       }
 
       return { statusCode: 200, result: total_cost };
@@ -184,7 +184,7 @@ export class ExpenseManagement {
 
       for(const expense of expenses){
         if(expense.payedFor.includes(myUserID)){
-          my_cost += parseInt(expense.amount as unknown as string) / expense.payedFor.length;
+          my_cost += parseFloat(expense.amount as unknown as string) / expense.payedFor.length;
         }
       }
       return { statusCode: 200, result: my_cost };
@@ -217,7 +217,7 @@ export class ExpenseManagement {
       let cost_spent_by_me = 0;
       for(const expense of expenses){
         if(expense.payedBy == myUserID){
-          cost_spent_by_me += parseInt(expense.amount as unknown as string);
+          cost_spent_by_me += parseFloat(expense.amount as unknown as string);
         }
       }
       const my_saldo = cost_spent_by_me - my_cost;
@@ -269,8 +269,8 @@ export class ExpenseManagement {
                 if (betrag > 0) {
                   compensation_payments.push(
                         {
-                            by: i + 1,
-                            to: j + 1,
+                            by: salden[i].userID,
+                            to: salden[j].userID,
                             amount: betrag,
                         }
                     );
