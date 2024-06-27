@@ -101,8 +101,8 @@ const deleteExpense = async () => {
     alert("Konnte Gruppe nicht löschen");
   }
 }
-onMounted(() => {
-  fetchGroupInfo();
+onMounted( async () => {
+  await fetchGroupInfo();
   if (props.mode == "view") {
     fetchExpense();
   }
