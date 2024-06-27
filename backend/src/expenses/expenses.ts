@@ -34,8 +34,9 @@ export class ExpenseManagement {
     let tagId = expense.tagId || null;
 
     try {
+      const date = new Date(expense.timestamp);
       const sql = "INSERT INTO expenses (groupId, title, amount, timestamp, payedBy, tagId, picPath) VALUES (?, ?, ?, ?, ?, ?, ?)";
-      const values = [expense.groupId, expense.title, expense.amount, expense.timestamp, expense.payedBy, tagId, expense.picPath];
+      const values = [expense.groupId, expense.title, expense.amount, date, expense.payedBy, tagId, expense.picPath];
       const response = await this.db.execute<mysql.OkPacket>(sql, values);
       const expenseID = response[0].insertId;
 
