@@ -49,10 +49,14 @@ const submit = async () => {
           placeholder="so wirst du angezeit werden"
         />
       </div>
-      <button class="btn-primary" type="submit" @click="submit">
-        Registrieren
-      </button>
+      <div class="centered-content">
+        <button class="btn-primary" type="submit" @click="submit">
+          Registrieren
+        </button>
+        <router-link to="/signin"
+          >Schon einen Account? Hier einloggen!</router-link
+        >
+      </div>
     </div>
-    <router-link to="/signin">Schon einen Account? Hier einloggen!</router-link>
   </div>
 </template>

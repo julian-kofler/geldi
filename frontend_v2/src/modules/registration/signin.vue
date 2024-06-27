@@ -16,34 +16,34 @@ const submit = async () => {
 
 <template>
   <div class="content-container">
-    <h1>Ausgabenverwaltung</h1>
-    <p>Ausgaben besser aufteilen!</p>
-    <div>
-      <div class="input-field">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          v-model="email"
-          placeholder="max.mustermann@abc.de"
-        />
-      </div>
-      <div class="input-field">
-        <label for="password">Passwort</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          v-model="password"
-        />
-      </div>
-      <button class="btn-primary" type="submit" @click="submit">
-        Einloggen
-      </button>
+    <div class="centered-content">
+      <img src="@/assets/geldi.svg" alt="Geldi" width="125" height="125" />
+      <h1>Geldi</h1>
+      <div>Ausgaben besser aufteilen!</div>
+      <br>
+      <br>
     </div>
-    <router-link to="/signup"
+
+    <div class="input-field">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        name="email"
+        id="email"
+        v-model="email"
+        placeholder="max.mustermann@abc.de"
+      />
+    </div>
+    <div class="input-field">
+      <label for="password">Passwort</label>
+      <input type="password" name="password" id="password" v-model="password" />
+    </div>
+    <div class="centered-content">
+      <button class="btn-primary" type="submit" @click="submit">Einloggen</button>
+      <router-link to="/signup"
       >Noch keinen Account? Hier registrieren!</router-link
     >
+    </div>
+
   </div>
 </template>
