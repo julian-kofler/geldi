@@ -27,3 +27,9 @@ export interface GroupParams {
     tagId?: number;
     picPath?: string;
   }
+  
+export interface CompensationPayment {
+  by: number,
+  to: number,
+  amount: number,
+}

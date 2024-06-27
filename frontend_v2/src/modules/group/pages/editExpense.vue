@@ -49,7 +49,7 @@ const fetchExpense = async () => {
 };
 const postExpense = async () => {
   try {
-    const res = postBackend("/expenses", JSON.stringify(expense.value));
+    const res = await postBackend("/expenses", JSON.stringify(expense.value));
     backToGroups();
   } catch (error) {
     alert("Error: " + error);
@@ -57,7 +57,7 @@ const postExpense = async () => {
 };
 const updateExpense = async () => {
   try {
-    const res = putBackend("/expenses", JSON.stringify(expense.value));
+    const res = await putBackend("/expenses", JSON.stringify(expense.value));
     backToGroups();
   } catch (error) {
     alert("Error: " + error);
@@ -76,9 +76,9 @@ const abort = () => {
 const saveExpense = async () => {
   isEdit.value = false;
   if (props.mode == "new") {
-    postExpense();
+    await postExpense();
   } else if (props.mode == "view") {
-    updateExpense();
+    await updateExpense();
   }
 };
 onMounted(() => {
