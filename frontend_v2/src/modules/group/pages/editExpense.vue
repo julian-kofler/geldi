@@ -36,6 +36,7 @@ const groupInfo = ref<GroupResponse>();
 const fetchGroupInfo = async () => {
   const res = await getBackend(`/groups/group?groupId=${route.params.groupID}`);
   groupInfo.value = res.result;
+  expense.value.payedFor = res.result.members.map((member:GroupMember) => member.userId);
 };
 
 const isEdit = ref(props.mode === "view" ? false : true);
