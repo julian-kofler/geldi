@@ -11,6 +11,7 @@ import {
   postBackend,
   putBackend,
   getMyUserID,
+  deleteBackend,
 } from "@/components/backendHandler";
 import selectUser from "../components/selectUser.vue";
 import abort_save_buttons from "@/components/abort_save_buttons.vue";
@@ -90,6 +91,16 @@ const saveExpense = async () => {
     await updateExpense();
   }
 };
+
+const isDelete = ref<boolean>(false);
+const deleteExpense = async () => {
+  try {
+    const res = await deleteBackend(`/expenses/group/${route.params.groupID}/expense/${expense.value.id}`);
+    router.push(`/groups/${route.params.groupID}`);
+  } catch (error) {
+    alert("Konnte Gruppe nicht löschen");
+  }
+}
 onMounted(() => {
   fetchGroupInfo();
   if (props.mode == "view") {
@@ -107,9 +118,12 @@ onMounted(() => {
       <div v-if="isEdit == false" @click="isEdit = true">
         <font-awesome-icon icon="fa-solid fa-pen-to-square" />
       </div>
+      <div v-if="isEdit == true && isDelete == false" @click="isDelete = true">
+        <font-awesome-icon icon="fa-solid fa-trash-can" />
+      </div>
     </template>
   </TopBar>
-  <div class="content-container with-top-bar">
+  <div v-if="!isDelete" class="content-container with-top-bar">
     <div></div>
     <div>
       <div class="input-field">
@@ -179,4 +193,27 @@ onMounted(() => {
       ></abort_save_buttons>
     </div>
   </div>
+  <div v-if="isDelete" class="content-container with-top-bar">
+    <h1>Ausgabe löschen ?</h1>
+    <div class="button-abort-save">
+      <button @click="abort" class="btn-secondary biggerButton" type="submit">
+        abbrechen
+      </button>
+      <button @click="deleteExpense" class="btn-primary" type="submit">
+        Löschen
+      </button>
+    </div>
+  </div>
 </template>
+
+<style scoped>
+.button-abort-save {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  gap: 12px;
+}
+.biggerButton{
+  flex-grow: 2;
+}
+</style>

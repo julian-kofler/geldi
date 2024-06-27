@@ -55,7 +55,7 @@ const postGroup = async () => {
 };
 const deleteGroup = async () => {
   try {
-    const res = deleteBackend(`/groups/group/${route.params.groupID}`);
+    const res = await deleteBackend(`/groups/group/${route.params.groupID}`);
     router.push(`/groups`);
   } catch (error) {
     alert("Konnte Gruppe nicht löschen");

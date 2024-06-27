@@ -35,7 +35,7 @@ router.put("/", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: 
     res.status(response.statusCode).json(response.message);
 });
 
-router.delete("/group/:groupID/expense/:expenseID", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: Response) => {
+router.delete("/group/:groupId/expense/:expenseID", loginRequired, UserIsInGroup, async (req: RequestWithUser, res: Response) => {
     const expenseID = req.params.expenseID;
     const response = await expenseMgmnt.deleteExpense(parseInt(expenseID));
     res.status(response.statusCode).json(response.message);
