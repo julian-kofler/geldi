@@ -50,7 +50,7 @@ const postGroup = async () => {
       name: new_group_name.value,
       memberEmails: new_member_emails.value,
     };
-    postBackend("/groups", JSON.stringify(body));
+    await postBackend("/groups", JSON.stringify(body));
     router.push(`/groups`);
   } catch {
     alert("Konnte Gruppe nicht erstellen");
