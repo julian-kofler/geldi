@@ -23,6 +23,7 @@ const fetchExpenses = async () => {
   const url = `/expenses?groupId=${route.params.groupID}`;
   const res = await getBackend(url);
   expenses.value = res.result;
+  expenses.value?.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 };
 
 const newExpense = () => {

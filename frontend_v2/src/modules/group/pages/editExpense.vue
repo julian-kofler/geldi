@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import type {
   ExpenseParams,
   GroupMember,
@@ -27,10 +27,18 @@ const expense = ref<ExpenseParams>({
   groupId: parseInt(route.params.groupID as string),
   title: "",
   amount: 0.0,
-  timestamp: new Date().toISOString().split("T")[0],
+  timestamp: new Date().toISOString(),
   payedBy: getMyUserID(),
   payedFor: [],
 });
+const date = computed({
+  get() {
+    return expense.value.timestamp.split('T')[0];
+  },
+  set(date: string) {
+    expense.value.timestamp = date;
+  }
+})
 
 const groupInfo = ref<GroupResponse>();
 const fetchGroupInfo = async () => {
@@ -44,7 +52,7 @@ const isEdit = ref(props.mode === "view" ? false : true);
 const fetchExpense = async () => {
   const url = `/expenses/expense?expenseId=${route.params.expenseID}&groupId=${route.params.groupID}`;
   const data = await getBackend(url);
-  data.result.timestamp = data.result.timestamp.split("T")[0];
+  data.result.timestamp = data.result.timestamp;
   expense.value = data.result;
   original_expense.value = JSON.parse(JSON.stringify(data.result)); //deep copy
 };
@@ -130,7 +138,7 @@ onMounted(() => {
       <div class="input-field">
         <label for="date">Datum</label>
         <input
-          v-model="expense.timestamp"
+          v-model="date"
           type="date"
           name="date"
           id="date"
