@@ -33,6 +33,9 @@ const add_member_to_list = () => {
   new_member_emails.value.push(member_to_add.value);
   member_to_add.value = "";
 };
+const removeFromNewMemberEmails = (email:string) => {
+  new_member_emails.value = new_member_emails.value.filter((mail) => mail != email);
+};
 
 const fetchGroupInfo = async () => {
   const res = await getBackend(`/groups/group?groupId=${route.params.groupID}`);
@@ -135,9 +138,9 @@ onMounted(() => {
         <label for="members">eingeladene Mitglieder:</label>
         <div v-for="email in new_member_emails" class="input-and-button">
           <div class="like-input">{{ email }}</div>
-          <button v-if="isEdit == true" class="btn-secondary">
-            <font-awesome-icon icon="fa-solid fa-trash" />
-          </button>
+          <div @click="removeFromNewMemberEmails(email)" v-if="isEdit == true" class="icon-button">
+            <font-awesome-icon icon="fa-solid fa-trash-can" />
+          </div>
         </div>
       </div>
     </div>
