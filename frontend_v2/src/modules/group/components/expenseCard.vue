@@ -14,20 +14,10 @@ const props = defineProps<{
       <p>{{ props.title }}</p>
       <p>{{ props.amount }}€</p>
     </div>
-    <div class="payedby-and-date">
+    <!-- <div class="payedby-and-date">
       <p>Bezahlt von: {{ props.payedby }}</p>
       <p>{{ props.date }}</p>
-    </div>
+    </div> -->
   </div>
 </template>
 
-<style scoped>
-.title-and-amount {
-  display: flex;
-  justify-content: space-between;
-}
-.payedby-and-date {
-  display: flex;
-  justify-content: space-between;
-}
-</style>

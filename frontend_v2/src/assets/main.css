@@ -177,3 +177,7 @@ button {
   justify-content: center;
   text-align: center;
 }
+.title-and-amount {
+  display: flex;
+  justify-content: space-between;
+}

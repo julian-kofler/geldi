@@ -21,9 +21,6 @@ const fetchGroupInfo = async () => {
   groupInfo.value = res.result;
 };
 const nickname = (userID: number):string => {
-  if (userID == getMyUserID()){
-    return 'dir';
-  }
   return groupInfo.value?.members.find((member) => member.userId == userID)?.nickname || "Loading..."
 }
 
@@ -39,17 +36,10 @@ onMounted(()=>{
   </TopBar>
   <div class="content-container with-top-bar">
     <div v-for="payment in compensation_payments" class="card">
-      <div>von: {{ nickname(payment.by) }}</div>
-      <div>an: {{ nickname(payment.to) }}</div>
-      <div>Kosten: {{ payment.amount }} €</div>
-    </div>
-    <div v-for="payment in compensation_payments">
-
+      <div class="title-and-amount"> 
+        <p><i>{{ nickname(payment.by) }}</i> an <i>{{ nickname(payment.to) }}</i></p>
+        <p>{{ payment.amount.toFixed(2) }} €</p>
+      </div>
     </div>
   </div>
 </template>
-<style scoped>
-.card{
-  flex-direction: row;
-}
-</style>
