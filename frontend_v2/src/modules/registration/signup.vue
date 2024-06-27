@@ -47,6 +47,7 @@ const submit = async () => {
           id="nickname"
           v-model="nickname"
           placeholder="so wirst du angezeit werden"
+          @keyup.enter="submit"
         />
       </div>
       <div class="centered-content">

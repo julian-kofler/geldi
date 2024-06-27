@@ -36,7 +36,7 @@ const submit = async () => {
     </div>
     <div class="input-field">
       <label for="password">Passwort</label>
-      <input type="password" name="password" id="password" v-model="password" />
+      <input type="password" name="password" id="password" v-model="password" @keyup.enter="submit" />
     </div>
     <div class="centered-content">
       <button class="btn-primary" type="submit" @click="submit">Einloggen</button>
