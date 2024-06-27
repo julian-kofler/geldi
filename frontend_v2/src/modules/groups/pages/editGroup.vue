@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
-import { getBackend, postBackend } from "@/components/backendHandler";
+import { deleteBackend, getBackend, postBackend } from "@/components/backendHandler";
 import abortSaveButtons from "@/components/abort_save_buttons.vue";
 import TopBar from "@/components/headerBar.vue";
 import type { GroupResponse } from "@/components/types";
@@ -48,21 +48,31 @@ const postGroup = async () => {
       memberEmails: new_member_emails.value,
     };
     postBackend("/groups", JSON.stringify(body));
+    router.push(`/groups`);
   } catch {
     alert("Konnte Gruppe nicht erstellen");
   }
 };
+const deleteGroup = async () => {
+  try {
+    const res = deleteBackend(`/groups/group/${route.params.groupID}`);
+    router.push(`/groups`);
+  } catch (error) {
+    alert("Konnte Gruppe nicht löschen");
+  }
+}
 const abort = () => {
   if (props.mode == "new") {
     router.push("/groups");
     return;
   }
   isEdit.value = false;
+  isDelete.value = false;
   new_group_name.value = groupInfo.value?.name ?? "";
   new_member_emails.value = [];
   member_to_add.value = "";
 };
-
+const isDelete = ref<boolean>(false);
 onMounted(() => {
   if (props.mode === "view") {
     fetchGroupInfo();
@@ -81,9 +91,12 @@ onMounted(() => {
       <div v-if="isEdit == false" @click="isEdit = true">
         <font-awesome-icon icon="fa-solid fa-pen-to-square" />
       </div>
+      <div v-if="isEdit == true && isDelete == false" @click="isDelete = true">
+        <font-awesome-icon icon="fa-solid fa-trash-can" />
+      </div>
     </template>
   </TopBar>
-  <div class="content-container with-top-bar">
+  <div v-if="!isDelete" class="content-container with-top-bar">
     <div class="input-field">
       <label for="name">Gruppenname</label>
       <input
@@ -132,9 +145,6 @@ onMounted(() => {
       <label for="members">Mitglieder:</label>
       <div v-for="member in groupInfo?.members" class="input-and-button">
         <div class="like-input">{{ member.nickname }}</div>
-        <button v-if="isEdit == true" class="btn-secondary">
-          <font-awesome-icon icon="fa-solid fa-trash" />
-        </button>
       </div>
     </div>
     <abortSaveButtons
@@ -142,6 +152,17 @@ onMounted(() => {
       @save="postGroup()"
       @abort="abort"
     ></abortSaveButtons>
+  </div>
+  <div v-if="isDelete" class="content-container with-top-bar">
+    <h1>Gruppe löschen ?</h1>
+    <div class="button-abort-save">
+      <button @click="abort" class="btn-secondary biggerButton" type="submit">
+        abbrechen
+      </button>
+      <button @click="deleteGroup" class="btn-primary" type="submit">
+        Löschen
+      </button>
+    </div>
   </div>
 </template>
 
@@ -154,5 +175,15 @@ onMounted(() => {
 }
 .icon-button {
   padding: 10px;
+}
+
+.button-abort-save {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  gap: 12px;
+}
+.biggerButton{
+  flex-grow: 2;
 }
 </style>

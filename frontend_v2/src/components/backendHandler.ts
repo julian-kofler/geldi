@@ -95,7 +95,30 @@ export async function putBackend(url: string, body: string): Promise<any> {
   }
   return data;
 }
+export async function deleteBackend(url: string): Promise<any> {
+  let response = await fetch(backend_url + url, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      "Content-Type": "application/json",
+    }
+  });
 
+  const data = await response.json();
+  if (!response.ok) {
+    if (data.message != "Token expired") {
+      console.error("Failed to fetch", response.status, response.statusText);
+      throw new Error(
+        `Failed to fetch, ${response.status}, ${response.statusText}`
+      );
+    }
+    const refreshed = await refreshjwtToken();
+    if (refreshed) {
+      return await deleteBackend(url);
+    }
+  }
+  return data;
+}
 export async function signup(
   email: string,
   password: string,
