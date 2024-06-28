@@ -12,11 +12,19 @@ const submit = async () => {
   await signin(email.value, password.value);
   router.push("/groups");
 };
+
+const signup = async () => {
+  router.push("/signup");
+};
+
+const pwReset = async () => {
+  router.push("/passwordReset");
+};
 </script>
 
 <template>
   <div>
-    <h1>Ausgabenverwaltung</h1>
+    <h1>Geldi</h1>
     <p>Ausgaben besser aufteilen!</p>
     <div>
       <div class="input-field">
@@ -26,7 +34,7 @@ const submit = async () => {
           name="email"
           id="email"
           v-model="email"
-          placeholder="max.mustermann@abc.de"
+          placeholder=""
         />
       </div>
       <div class="input-field">
@@ -38,10 +46,23 @@ const submit = async () => {
           v-model="password"
         />
       </div>
-      <button class="btn-primary" type="submit" @click="submit">
-        Einloggen
-      </button>
+      <div class="login_register_box">
+        <button class="btn-primary" type="submit" @click="submit">
+          Einloggen
+        </button>
+      </div>
+      <div class="login_register_box lower_box">
+        <p>Noch keinen Account?</p>
+        <button class="btn-primary" @click="signup">
+          Hier Registrieren
+        </button>
+      </div>
+      <div class="login_register_box">
+        <p>Passwort vergessen?</p>
+        <button class="btn-primary" @click="pwReset">
+          Passwort zurücksetzen
+        </button>
+      </div>
     </div>
-    <router-link to="/signup">Noch keinen Account? Hier registrieren!</router-link>
   </div>
 </template>

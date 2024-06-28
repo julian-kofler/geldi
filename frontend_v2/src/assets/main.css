@@ -1,9 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
-
 :root {
-  --ff: "Montserrat", sans-serif;
-  --h1: bold 48px/56px var(--ff);
-  --p: 16px/24px var(--ff);
+  --ff: "Verdana", sans-serif;
+  --h1: bold 2rem/1.17 var(--ff);
+  --p: 1rem/1.5 var(--ff);
   --colorprimary: white;
   --colorsecondary: black;
   --colorsecondary_2: #555;
@@ -12,10 +10,12 @@
 body {
   background: var(--colorprimary);
   color: var(--colorsecondary);
+  font-size: 1rem;
 }
 h1 {
   font: var(--h1);
   color: red;
+  text-align: center;
 }
 p {
   font: var(--p);
@@ -33,7 +33,7 @@ input {
   border-radius: 5px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   outline: none;
-  width: 100%;
+  width: 90%;
 }
 .like-input {
   padding: 12px;
@@ -129,4 +129,13 @@ button {
   padding: 2rem;
   display: flex;
   flex-direction: column;
+}
+.login_register_box{
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  margin: 0 auto;
+}
+.login_register_box.lower_box{
+  margin-top: 30px;
 }

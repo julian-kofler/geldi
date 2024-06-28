@@ -13,6 +13,10 @@ const submit = async() => {
   await signup(email.value, password.value, nickname.value);
   router.push("/groups");
 };
+
+const signin = async() => {
+  router.push("/signin/");
+}
 </script>
 
 <template>
@@ -49,10 +53,17 @@ const submit = async() => {
           placeholder="so wirst du angezeit werden"
         />
       </div>
-      <button class="btn-primary" type="submit" @click="submit">
-        Registrieren
-      </button>
+      <div class="login_register_box">
+        <button class="btn-primary" type="submit" @click="submit">
+          Registrieren
+        </button>
+      </div>
+      <div class="login_register_box lower_box">
+        <p>Schon einen Account?</p>
+        <button class="btn-primary" @click="signin">
+          Hier Einloggen
+        </button>
+      </div>
     </div>
-    <router-link to="/signin">Schon einen Account? Hier einloggen!</router-link>
   </div>
 </template>
