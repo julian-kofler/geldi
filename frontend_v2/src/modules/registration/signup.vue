@@ -62,14 +62,13 @@ const signin = async() => {
         />
       </div>
       <div class="login_register_box">
-        <button class="btn-primary" type="submit" @click="submit">
+        <button class="btn-primary" type="submit">
           Registrieren
         </button>
       </div>
       <div class="login_register_box lower_box">
-        <p>Schon einen Account?</p>
-        <button class="btn-primary" @click="signin">
-          Hier Einloggen
+        <button class="btn-secondary" @click="router.push('/signin/')">
+          Schon einen Account?
         </button>
       </div>
     </form>

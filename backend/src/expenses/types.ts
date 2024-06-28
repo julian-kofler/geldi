@@ -15,7 +15,7 @@ export interface ExpenseParams {
   id?: number;
   groupId: number;
   title: string;
-  amount: number; //wrong, type is string
+  amount: number;
   timestamp: Date;
   payedBy: number;
   payedFor: number[];

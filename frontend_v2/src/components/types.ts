@@ -6,7 +6,7 @@ export interface GroupParams {
   }
   
   export interface GroupMember {
-    userId: number; //different in backend: 'id'
+    userId: number;
     nickname: string;
   }
   

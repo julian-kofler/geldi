@@ -16,14 +16,6 @@ const submit = async () => {
     alert("Einloggen fehlgeschlagen!");
   }
 };
-
-const signup = async () => {
-  router.push("/signup");
-};
-
-const pwReset = async () => {
-  router.push("/passwordReset");
-};
 </script>
 
 <template>
@@ -63,15 +55,13 @@ const pwReset = async () => {
         <button class="btn-primary" type="submit">Einloggen</button>
       </div>
       <div class="login_register_box lower_box">
-        <p>Noch keinen Account?</p>
-        <button class="btn-primary" @click="signup">
-          Hier Registrieren
+        <button class="btn-secondary" @click="router.push('/signup');">
+          Noch keinen Account?
         </button>
       </div>
       <div class="login_register_box">
-        <p>Passwort vergessen?</p>
-        <button class="btn-primary" @click="pwReset">
-          Passwort zurücksetzen
+        <button class="btn-secondary" @click="alert('noch nicht implementiert')">
+          Passwort vergessen?
         </button>
       </div>      
     </form>
