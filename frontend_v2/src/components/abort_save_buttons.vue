@@ -1,6 +1,6 @@
 <template>
     <div class="button-abort-save">
-      <button @click="$emit('abort')" class="btn-secondary" type="submit">
+      <button @click="$emit('abort')" class="btn-secondary">
         abbrechen
       </button>
       <button @click="$emit('save')" class="btn-primary" type="submit">

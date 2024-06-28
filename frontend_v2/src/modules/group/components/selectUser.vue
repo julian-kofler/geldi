@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import type { GroupMember } from "@/components/types";
 
-const props = defineProps(["users", "edit"]);
-const selected = defineModel("selected", { required: true });
+const props = defineProps<{
+  users: GroupMember[];
+  edit: boolean;
+}>();
+
+const selected = defineModel<number[]>("selected", { required: true });
 
 const toggleSelect = (id: number) => {
   if (props.edit === false) return;
@@ -19,24 +24,23 @@ const isSelected = (id: number) => {
 <template>
   <div class="user-select-container">
     <ul class="user-list">
-      <li
+      <div
         v-for="user in props.users"
-        :key="user.id"
-        @click="toggleSelect(user.id)"
+        :key="user.userId"
+        @click="toggleSelect(user.userId)"
         :class="{
           'select-user': true,
-          'selected': isSelected(user.id),
-          // 'unselected': !isSelected(user.id),
+          selected: isSelected(user.userId),
         }"
       >
         {{ user.nickname }}
-      </li>
+      </div>
     </ul>
   </div>
 </template>
 
 <style scoped>
-.select-user{
+.select-user {
   padding: 12px;
   font-size: 1em;
   border-radius: 5px;
@@ -44,27 +48,27 @@ const isSelected = (id: number) => {
   outline: none;
   width: fit-content;
 
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   box-sizing: border-box;
 
-  color: rgb(119, 119, 119);
+  color: rgb(157, 157, 157);
 }
-.user-list{
+.user-list {
   list-style-type: none;
   flex-wrap: wrap;
-  display: flex;
+  display: flex;  
   flex-direction: row;
   justify-content: space-around;
   padding: 0;
   align-content: flex-start;
 }
-.selected{
+.selected {
   border-color: var(--coloraccent);
   color: black;
+  background-color: rgba(255, 255, 255, 0);
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.452)
 }
 .user-list li {
   display: inline-block;
 }
-
-
 </style>

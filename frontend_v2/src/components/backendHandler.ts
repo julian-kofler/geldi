@@ -70,7 +70,55 @@ export async function postBackend(url: string, body: string): Promise<any> {
   }
   return data;
 }
+export async function putBackend(url: string, body: string): Promise<any> {
+  let response = await fetch(backend_url + url, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      "Content-Type": "application/json",
+    },
+    body: body,
+  });
 
+  const data = await response.json();
+  if (!response.ok) {
+    if (data.message != "Token expired") {
+      console.error("Failed to fetch", response.status, response.statusText);
+      throw new Error(
+        `Failed to fetch, ${response.status}, ${response.statusText}`
+      );
+    }
+    const refreshed = await refreshjwtToken();
+    if (refreshed) {
+      return await postBackend(url, body);
+    }
+  }
+  return data;
+}
+export async function deleteBackend(url: string): Promise<any> {
+  let response = await fetch(backend_url + url, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      "Content-Type": "application/json",
+    }
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    if (data.message != "Token expired") {
+      console.error("Failed to fetch", response.status, response.statusText);
+      throw new Error(
+        `Failed to fetch, ${response.status}, ${response.statusText}`
+      );
+    }
+    const refreshed = await refreshjwtToken();
+    if (refreshed) {
+      return await deleteBackend(url);
+    }
+  }
+  return data;
+}
 export async function signup(
   email: string,
   password: string,
@@ -110,8 +158,6 @@ export async function signin(email: string, password: string) {
     email: email,
     password: password,
   };
-  console.log("body", body);
-  console.log("url", url);
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -134,7 +180,7 @@ export async function signin(email: string, password: string) {
     console.error(error);
   }
 }
-function getUserIdFromJWT(token: string): string | null {
+function getUserIdFromJWT(token: string): string {
   try {
     // Split the token into parts
     const parts = token.split(".");
@@ -155,9 +201,10 @@ function getUserIdFromJWT(token: string): string | null {
     return userId;
   } catch (error) {
     console.error("Failed to decode JWT:", error);
-    return null;
+    throw new Error("couldn't decode jwt");
+    
   }
 }
 export function getMyUserID(): number {
-  return parseInt(getUserIdFromJWT(localStorage.getItem("jwt")));
+  return parseInt(getUserIdFromJWT(localStorage.getItem("jwt") as string));
 }

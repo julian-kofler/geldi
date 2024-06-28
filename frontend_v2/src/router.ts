@@ -53,6 +53,10 @@ const router = createRouter({
       component: () => import("./modules/group/pages/editExpense.vue"),
       props: {mode: "new"}
     },
+    {
+      path: "/groups/:groupID(\\d+)/compensation-payments",
+      component: () => import("./modules/group/pages/compensationPayments.vue"),
+    },
   ],
 });
 

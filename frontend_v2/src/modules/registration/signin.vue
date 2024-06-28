@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import {signin} from "@/components/backendHandler";
+import { signin } from "@/components/backendHandler";
 
 const router = useRouter();
 
@@ -9,16 +9,25 @@ const email = ref("");
 const password = ref("");
 
 const submit = async () => {
-  await signin(email.value, password.value);
-  router.push("/groups");
+  try {
+    await signin(email.value, password.value);
+    router.push("/groups");
+  } catch (error) {
+    alert("Einloggen fehlgeschlagen!");
+  }
 };
 </script>
 
 <template>
-  <div>
-    <h1>Ausgabenverwaltung</h1>
-    <p>Ausgaben besser aufteilen!</p>
-    <div>
+  <div class="content-container">
+    <div class="centered-content">
+      <img src="@/assets/geldi.svg" alt="Geldi" width="125" height="125" />
+      <h1>Geldi</h1>
+      <div>Ausgaben besser aufteilen!</div>
+      <br />
+      <br />
+    </div>
+    <form @submit.prevent="submit">
       <div class="input-field">
         <label for="email">Email</label>
         <input
@@ -27,6 +36,8 @@ const submit = async () => {
           id="email"
           v-model="email"
           placeholder="max.mustermann@abc.de"
+          required
+          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
         />
       </div>
       <div class="input-field">
@@ -36,12 +47,15 @@ const submit = async () => {
           name="password"
           id="password"
           v-model="password"
+          required
         />
       </div>
-      <button class="btn-primary" type="submit" @click="submit">
-        Einloggen
-      </button>
-    </div>
-    <router-link to="/signup">Noch keinen Account? Hier registrieren!</router-link>
+      <div class="centered-content">
+        <button class="btn-primary" type="submit">Einloggen</button>
+        <router-link to="/signup"
+          >Noch keinen Account? Hier registrieren!</router-link
+        >
+      </div>
+    </form>
   </div>
 </template>

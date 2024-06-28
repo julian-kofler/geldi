@@ -9,16 +9,20 @@ const email = ref("");
 const password = ref("");
 const nickname = ref("");
 
-const submit = async() => {
-  await signup(email.value, password.value, nickname.value);
-  router.push("/groups");
+const submit = async () => {
+  try {
+    await signup(email.value, password.value, nickname.value);
+    router.push("/groups");
+  } catch (error) {
+    alert("Registrierung fehlgeschlagen!");
+  }
 };
 </script>
 
 <template>
-  <div>
+  <div class="content-container">
     <h1>Account erstellen</h1>
-    <div>
+    <form @submit.prevent="submit">
       <div class="input-field">
         <label for="email">Email</label>
         <input
@@ -27,6 +31,7 @@ const submit = async() => {
           id="email"
           v-model="email"
           placeholder="max.mustermann@abc.de"
+          required
         />
       </div>
       <div class="input-field">
@@ -37,6 +42,7 @@ const submit = async() => {
           id="password"
           v-model="password"
           placeholder="erstell ein sicheres Passwort"
+          required
         />
       </div>
       <div class="input-field">
@@ -47,12 +53,18 @@ const submit = async() => {
           id="nickname"
           v-model="nickname"
           placeholder="so wirst du angezeit werden"
+          required
+          pattern="[\w]+"
         />
       </div>
-      <button class="btn-primary" type="submit" @click="submit">
-        Registrieren
-      </button>
-    </div>
-    <router-link to="/signin">Schon einen Account? Hier einloggen!</router-link>
+      <div class="centered-content">
+        <button class="btn-primary" type="submit">
+          Registrieren
+        </button>
+        <router-link to="/signin"
+          >Schon einen Account? Hier einloggen!</router-link
+        >
+      </div>
+    </form>
   </div>
 </template>
