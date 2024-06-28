@@ -43,7 +43,7 @@ const pwReset = async () => {
           name="email"
           id="email"
           v-model="email"
-          placeholder="max.mustermann@abc.de"
+          placeholder=""
           required
           pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
         />
@@ -58,10 +58,9 @@ const pwReset = async () => {
           required
         />
       </div>
+
       <div class="login_register_box">
-        <button class="btn-primary" type="submit" @click="submit">
-          Einloggen
-        </button>
+        <button class="btn-primary" type="submit">Einloggen</button>
       </div>
       <div class="login_register_box lower_box">
         <p>Noch keinen Account?</p>
@@ -74,14 +73,7 @@ const pwReset = async () => {
         <button class="btn-primary" @click="pwReset">
           Passwort zurücksetzen
         </button>
-      </div>
-    </div>
-      <div class="centered-content">
-        <button class="btn-primary" type="submit">Einloggen</button>
-        <router-link to="/signup"
-          >Noch keinen Account? Hier registrieren!</router-link
-        >
-      </div>
+      </div>      
     </form>
   </div>
 </template>

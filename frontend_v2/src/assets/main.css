@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
 :root {
-  --ff: "Verdana", sans-serif;
+  --ff: "Noto Sans", sans-serif; 
   --h1: bold 2rem/1.17 var(--ff);
   --p: 1rem/1.5 var(--ff);
   --colorprimary: white;
@@ -84,9 +86,6 @@ button {
   bottom: 80px;
 }
 .card {
-  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); */
-  /* border-radius: 5px; */
-  /* padding: 10px; */
   margin-bottom: 10px;
 
   padding-top: 4px;
@@ -120,9 +119,6 @@ button {
   align-items: center;
   height: 60px;
   left:0;
-
-  /* background-color: rgb(255, 255, 255);
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); */
   background-color: #f8f9fa; /* Lighter background */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Softer shadow */
 }
@@ -159,16 +155,27 @@ button {
   margin-top: 60px;
 }
 .content-container {
-  padding: 5vw;
+  padding: 2.5vw;
   display: flex;
   flex-direction: column;
 }
 .login_register_box{
   display: flex;
   flex-direction: column;
-  width: 60%;
+  width: 12rem;
   margin: 0 auto;
 }
 .login_register_box.lower_box{
   margin-top: 30px;
+}
+.centered-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.title-and-amount {
+  display: flex;
+  justify-content: space-between;
 }

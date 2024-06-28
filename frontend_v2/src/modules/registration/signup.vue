@@ -34,7 +34,7 @@ const signin = async() => {
           name="email"
           id="email"
           v-model="email"
-          placeholder="max.mustermann@abc.de"
+          placeholder=""
           required
         />
       </div>
@@ -45,7 +45,7 @@ const signin = async() => {
           name="password"
           id="password"
           v-model="password"
-          placeholder="erstell ein sicheres Passwort"
+          placeholder=""
           required
         />
       </div>
@@ -56,7 +56,7 @@ const signin = async() => {
           name="nickname"
           id="nickname"
           v-model="nickname"
-          placeholder="so wirst du angezeit werden"
+          placeholder=""
           required
           pattern="[\w]+"
         />
@@ -72,6 +72,6 @@ const signin = async() => {
           Hier Einloggen
         </button>
       </div>
-    </div>
+    </form>
   </div>
 </template>
