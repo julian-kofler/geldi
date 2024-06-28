@@ -99,6 +99,16 @@ async function createTables(connection: mysql.Connection): Promise<void> {
             CONSTRAINT fk_payedForUserID FOREIGN KEY (userID) REFERENCES users(id)
         );
     `);
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS contact (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          userId INT NOT NULL,
+          contactId INT NOT NULL,
+          CONSTRAINT fk_cL_owner FOREIGN KEY (userId) REFERENCES users(id),
+          CONSTRAINT fk_cL_contact FOREIGN KEY (contactId) REFERENCES users(id)
+      );
+    `);
 }
 
 export const db = getConnection();
