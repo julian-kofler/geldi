@@ -20,30 +20,38 @@ const submit = async () => {
       <img src="@/assets/geldi.svg" alt="Geldi" width="125" height="125" />
       <h1>Geldi</h1>
       <div>Ausgaben besser aufteilen!</div>
-      <br>
-      <br>
+      <br />
+      <br />
     </div>
-
-    <div class="input-field">
-      <label for="email">Email</label>
-      <input
-        type="email"
-        name="email"
-        id="email"
-        v-model="email"
-        placeholder="max.mustermann@abc.de"
-      />
-    </div>
-    <div class="input-field">
-      <label for="password">Passwort</label>
-      <input type="password" name="password" id="password" v-model="password" @keyup.enter="submit" />
-    </div>
-    <div class="centered-content">
-      <button class="btn-primary" type="submit" @click="submit">Einloggen</button>
-      <router-link to="/signup"
-      >Noch keinen Account? Hier registrieren!</router-link
-    >
-    </div>
-
+    <form @submit.prevent="submit">
+      <div class="input-field">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          v-model="email"
+          placeholder="max.mustermann@abc.de"
+          required
+          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+        />
+      </div>
+      <div class="input-field">
+        <label for="password">Passwort</label>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          v-model="password"
+          required
+        />
+      </div>
+      <div class="centered-content">
+        <button class="btn-primary" type="submit">Einloggen</button>
+        <router-link to="/signup"
+          >Noch keinen Account? Hier registrieren!</router-link
+        >
+      </div>
+    </form>
   </div>
 </template>

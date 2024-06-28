@@ -123,76 +123,75 @@ onMounted( async () => {
       </div>
     </template>
   </TopBar>
-  <div v-if="!isDelete" class="content-container with-top-bar">
-    <div></div>
-    <div>
-      <div class="input-field">
-        <label for="title">Titel</label>
-        <input
-          v-model="expense.title"
-          type="text"
-          name="title"
-          id="title"
-          required
-          :disabled="!isEdit"
-          autofocus
-        />
-      </div>
-      <div class="input-field">
-        <label for="amount">Preis</label>
-        <input
-          v-model="expense.amount"
-          type="number"
-          name="amount"
-          id="amount"
-          required
-          :disabled="!isEdit"
-        />
-      </div>
-      <div class="input-field">
-        <label for="date">Datum</label>
-        <input
-          v-model="date"
-          type="date"
-          name="date"
-          id="date"
-          required
-          :disabled="!isEdit"
-        />
-      </div>
-      <div class="input-field">
-        <label for="payedby">Bezahlt von</label>
-        <select
-          v-model="expense.payedBy"
-          class="like-input"
-          :disabled="!isEdit"
+  <form
+    @submit.prevent="saveExpense()"
+    v-if="!isDelete"
+    class="content-container with-top-bar"
+  >
+    <div class="input-field">
+      <label for="title">Titel</label>
+      <input
+        v-model="expense.title"
+        type="text"
+        name="title"
+        id="title"
+        required
+        pattern="^[a-zA-Z0-9_%+-]+$"
+        title="bitte Titel eingeben"
+        :disabled="!isEdit"
+        autofocus
+      />
+    </div>
+    <div class="input-field">
+      <label for="amount">Preis</label>
+      <input
+        v-model="expense.amount"
+        type="number"
+        step="0.01"
+        min="0.01"
+        name="amount"
+        id="amount"
+        required
+        :disabled="!isEdit"
+      />
+    </div>
+    <div class="input-field">
+      <label for="date">Datum</label>
+      <input
+        v-model="date"
+        type="date"
+        name="date"
+        id="date"
+        required
+        :disabled="!isEdit"
+      />
+    </div>
+    <div class="input-field">
+      <label for="payedby">Bezahlt von</label>
+      <select v-model="expense.payedBy" class="like-input" :disabled="!isEdit">
+        <option disabled value="0">Please select one</option>
+        <option
+          v-for="member in groupInfo?.members"
+          :key="member.userId"
+          :value="member.userId"
         >
-          <option disabled value="0">Please select one</option>
-          <option
-            v-for="member in groupInfo?.members"
-            :key="member.userId"
-            :value="member.userId"
-          >
-            {{ member.nickname }}
-          </option>
-        </select>
-      </div>
-      <div>
-        <label for="payedfor">Bezahlt für</label>
-        <selectUser
-          v-model:selected="expense.payedFor"
-          :edit="isEdit"
-          :users="groupInfo?.members as GroupMember[]"
-        ></selectUser>
-      </div>
+          {{ member.nickname }}
+        </option>
+      </select>
     </div>
-    <div v-if="isEdit == true">
-      <abort_save_buttons
-        @abort="abort()"
-        @save="saveExpense()"
-      ></abort_save_buttons>
+    <div>
+      <label for="payedfor">Bezahlt für</label>
+      <selectUser
+        v-model:selected="expense.payedFor"
+        :edit="isEdit"
+        :users="groupInfo?.members as GroupMember[]"
+      ></selectUser>
     </div>
-  </div>
+    <abort_save_buttons
+      v-if="isEdit == true"
+      @abort="abort()"
+    ></abort_save_buttons>
+  </form>
   <div v-if="isDelete" class="content-container with-top-bar">
     <h1>Ausgabe löschen ?</h1>
     <div class="button-abort-save">
@@ -213,7 +212,7 @@ onMounted( async () => {
   margin-top: 20px;
   gap: 12px;
 }
-.biggerButton{
+.biggerButton {
   flex-grow: 2;
 }
 </style>

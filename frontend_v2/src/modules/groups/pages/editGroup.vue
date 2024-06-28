@@ -99,7 +99,7 @@ onMounted(() => {
       </div>
     </template>
   </TopBar>
-  <div v-if="!isDelete" class="content-container with-top-bar">
+  <form @submit.prevent="postGroup()" v-if="!isDelete" class="content-container with-top-bar">
     <div class="input-field">
       <label for="name">Gruppenname</label>
       <input
@@ -109,10 +109,12 @@ onMounted(() => {
         id="name"
         autofocus
         :disabled="!isEdit"
+        required
+        pattern="^[a-zA-Z0-9_%+-]+$"
       />
     </div>
-    <div v-if="isEdit == true" class="input-field">
-      <label for="add-member">Mitglied hinzufügen</label>
+    <form @submit.prevent="add_member_to_list()" v-if="isEdit == true" class="input-field">
+      <!-- <label for="add-member">Mitglied hinzufügen</label> -->
       <div class="input-and-button">
         <input
           v-model="member_to_add"
@@ -120,11 +122,11 @@ onMounted(() => {
           name="add-member"
           id="add-member"
           placeholder="moritz.müller@abc.de"
-          @keyup.enter="add_member_to_list()"
           :disabled="!isEdit"
+          required
+          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         />
         <button
-          @click="add_member_to_list()"
           class="btn-primary"
           type="submit"
           :disabled="!isEdit"
@@ -132,7 +134,7 @@ onMounted(() => {
           Hinzufügen
         </button>
       </div>
-    </div>
+    </form>
     <div>
       <div v-if="new_member_emails.length > 0">
         <label for="members">eingeladene Mitglieder:</label>
@@ -152,10 +154,9 @@ onMounted(() => {
     </div>
     <abortSaveButtons
       v-if="isEdit == true"
-      @save="postGroup()"
       @abort="abort"
     ></abortSaveButtons>
-  </div>
+  </form>
   <div v-if="isDelete" class="content-container with-top-bar">
     <h1>Gruppe löschen ?</h1>
     <div class="button-abort-save">

@@ -18,7 +18,7 @@ const submit = async () => {
 <template>
   <div class="content-container">
     <h1>Account erstellen</h1>
-    <div>
+    <form @submit.prevent="submit">
       <div class="input-field">
         <label for="email">Email</label>
         <input
@@ -27,6 +27,7 @@ const submit = async () => {
           id="email"
           v-model="email"
           placeholder="max.mustermann@abc.de"
+          required
         />
       </div>
       <div class="input-field">
@@ -37,6 +38,7 @@ const submit = async () => {
           id="password"
           v-model="password"
           placeholder="erstell ein sicheres Passwort"
+          required
         />
       </div>
       <div class="input-field">
@@ -47,17 +49,18 @@ const submit = async () => {
           id="nickname"
           v-model="nickname"
           placeholder="so wirst du angezeit werden"
-          @keyup.enter="submit"
+          required
+          pattern="[\w]+"
         />
       </div>
       <div class="centered-content">
-        <button class="btn-primary" type="submit" @click="submit">
+        <button class="btn-primary" type="submit">
           Registrieren
         </button>
         <router-link to="/signin"
           >Schon einen Account? Hier einloggen!</router-link
         >
       </div>
-    </div>
+    </form>
   </div>
 </template>
