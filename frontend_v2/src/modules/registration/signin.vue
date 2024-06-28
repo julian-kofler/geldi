@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import {signin} from "@/components/backendHandler";
+import { signin } from "@/components/backendHandler";
 
 const router = useRouter();
 
@@ -9,8 +9,12 @@ const email = ref("");
 const password = ref("");
 
 const submit = async () => {
-  await signin(email.value, password.value);
-  router.push("/groups");
+  try {
+    await signin(email.value, password.value);
+    router.push("/groups");
+  } catch (error) {
+    alert("Einloggen fehlgeschlagen!");
+  }
 };
 
 const signup = async () => {
@@ -23,10 +27,15 @@ const pwReset = async () => {
 </script>
 
 <template>
-  <div>
-    <h1>Geldi</h1>
-    <p>Ausgaben besser aufteilen!</p>
-    <div>
+  <div class="content-container">
+    <div class="centered-content">
+      <img src="@/assets/geldi.svg" alt="Geldi" width="125" height="125" />
+      <h1>Geldi</h1>
+      <div>Ausgaben besser aufteilen!</div>
+      <br />
+      <br />
+    </div>
+    <form @submit.prevent="submit">
       <div class="input-field">
         <label for="email">Email</label>
         <input
@@ -34,7 +43,9 @@ const pwReset = async () => {
           name="email"
           id="email"
           v-model="email"
-          placeholder=""
+          placeholder="max.mustermann@abc.de"
+          required
+          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
         />
       </div>
       <div class="input-field">
@@ -44,6 +55,7 @@ const pwReset = async () => {
           name="password"
           id="password"
           v-model="password"
+          required
         />
       </div>
       <div class="login_register_box">
@@ -64,5 +76,12 @@ const pwReset = async () => {
         </button>
       </div>
     </div>
+      <div class="centered-content">
+        <button class="btn-primary" type="submit">Einloggen</button>
+        <router-link to="/signup"
+          >Noch keinen Account? Hier registrieren!</router-link
+        >
+      </div>
+    </form>
   </div>
 </template>

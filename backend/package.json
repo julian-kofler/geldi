@@ -4,7 +4,7 @@
   "main": "build/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsc && nodemon",
+    "dev": "tsc && nodemon --inspect build/server.js",
     "prod": "tsc && node build/server.js"
   },
   "keywords": [],

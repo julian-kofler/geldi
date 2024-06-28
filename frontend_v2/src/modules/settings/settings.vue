@@ -19,27 +19,33 @@ const logout = async () => {
 
     if (!response.ok) {
       alert("Backend Side Logout failed");
-    //   return;
+      //   return;
     }
     localStorage.clear();
     router.push("/signin");
   } catch (error) {
     console.error("Logout error:", error);
-    alert("Logout failed");
+    alert("Logout fehlgeschlagen");
   }
 };
 const nichtImplementiert = () => {
-    alert('noch nicht implementiert');
-}
+  alert("noch nicht implementiert");
+};
 </script>
 
 <template>
   <div class="content-container with-bottom-bar">
     <h1>Einstellungen</h1>
     <button @click="logout()" class="btn-primary">Logout</button>
-    <button @click="nichtImplementiert" class="btn-primary">Passwort ändern</button>
-    <button @click="nichtImplementiert" class="btn-primary">Nickname ändern</button>
-    <button @click="nichtImplementiert" class="btn-primary">Account löschen</button>
+    <button @click="nichtImplementiert" class="btn-primary">
+      Passwort ändern
+    </button>
+    <button @click="nichtImplementiert" class="btn-primary">
+      Nickname ändern
+    </button>
+    <button @click="nichtImplementiert" class="btn-primary">
+      Account löschen
+    </button>
   </div>
   <NavigationBar></NavigationBar>
 </template>

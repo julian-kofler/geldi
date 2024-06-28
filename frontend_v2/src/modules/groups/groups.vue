@@ -4,14 +4,19 @@ import { getBackend } from "@/components/backendHandler";
 import groupCard from "./components/groupCard.vue";
 import { useRouter } from "vue-router";
 import NavigationBar from "@/components/NavigationBar.vue";
+import type { GroupResponse } from "@/components/types";
 
 const router = useRouter();
 
-const groups = ref([]);
+const groups = ref<GroupResponse[]>();
 
 const fetchGroups = async () => {
-  const response = await getBackend("/groups");
-  groups.value = response.result;
+  try {
+    const response = await getBackend("/groups");
+    groups.value = response.result;
+  } catch (error) {
+    alert("Konnte Gruppen nicht laden!");
+  }
 };
 onMounted(() => {
   fetchGroups();
@@ -19,7 +24,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <button @click="router.push('/groups/new')" class="btn-primary floating-button">
+  <button
+    @click="router.push('/groups/new')"
+    class="btn-primary floating-button"
+  >
     + Neue Gruppe
   </button>
   <div class="content-container with-bottom-bar">

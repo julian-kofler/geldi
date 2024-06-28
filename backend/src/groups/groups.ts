@@ -1,6 +1,6 @@
 import mysql, { RowDataPacket } from "mysql2/promise";
 
-import { Group, GroupParams } from "./types";
+import { Group, GroupParams, GroupResponse } from "./types";
 import { logger } from "../middleware/global.js";
 import { UserRepository } from "../user/userRepository.js";
 import { User } from "../user/types";
@@ -46,7 +46,7 @@ export class GroupManagement {
     }
   }
 
-  public async getGroups(userID: number): Promise<{ statusCode: number; result: GroupParams[] }> {
+  public async getGroups(userID: number): Promise<{ statusCode: number; result: GroupResponse[] }> {
     try {
       const sqlQuery = `SELECT g.id, g.name, g.completed
         FROM \`groups\` g
@@ -58,17 +58,17 @@ export class GroupManagement {
       const [groups] = await this.db.execute<Group[]>(sqlQuery, [userID]);
   
       console.log(groups);
-      const result: GroupParams[] = [];
+      const result: GroupResponse[] = [];
   
       for (let group of groups) {
         const sqlQuery2 =
-          "SELECT userId, nickname FROM members_in_groups mig inner join users u on mig.userId = u.id WHERE groupID = ?";
+          "SELECT userId, nickname, email FROM members_in_groups mig inner join users u on mig.userId = u.id WHERE groupID = ?";
         const [rows] = await this.db.execute<RowDataPacket[]>(sqlQuery2, [group.id]);
         // Cast rows to Member[] type
         const members: String[] = rows as unknown as String[];
         group.members = members;
   
-        result.push(group as GroupParams);
+        result.push(group as GroupResponse);
       }
   
       return { statusCode: 200, result };
@@ -79,7 +79,7 @@ export class GroupManagement {
     }
   }
 
-  public async getGroup(groupID: number): Promise<{ statusCode: number; result: GroupParams | null }> {
+  public async getGroup(groupID: number): Promise<{ statusCode: number; result: GroupResponse | null }> {
     try {
       const sqlQuery = "SELECT * FROM `groups` WHERE id = ?";
       const [groups] = await this.db.execute<Group[]>(sqlQuery, [groupID]);
@@ -89,13 +89,13 @@ export class GroupManagement {
       }
 
       const sqlQuery2 =
-        "SELECT userId, nickname FROM members_in_groups mig inner join users u on mig.userId = u.id WHERE groupID = ?";
+        "SELECT userId, nickname, email FROM members_in_groups mig inner join users u on mig.userId = u.id WHERE groupID = ?";
       const [rows] = await this.db.execute<RowDataPacket[]>(sqlQuery2, [groupID]);
       // Cast rows to Member[] type
       const members: String[] = rows as unknown as String[];
       groups[0].members = members;
 
-      return { statusCode: 200, result: groups[0] as GroupParams };
+      return { statusCode: 200, result: groups[0] as GroupResponse };
     } 
     catch (error) {
       logger.error((error as Error).message);
@@ -155,10 +155,10 @@ export class GroupManagement {
   public async deleteGroup(groupID: number): Promise<{ statusCode: number; message: string }> {
     try {
       const sqlQuery = "DELETE FROM members_in_groups WHERE groupID = ?";
-      await this.db.execute(sqlQuery, groupID);
+      await this.db.execute(sqlQuery, [groupID]);
 
       const sqlQuery2 = "DELETE FROM `groups` WHERE id = ?";
-      await this.db.execute(sqlQuery2, groupID);
+      await this.db.execute(sqlQuery2, [groupID]);
       return { statusCode: 200, message: "Group deleted successfully" };
     } 
     catch (error) {

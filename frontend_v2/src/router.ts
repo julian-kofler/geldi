@@ -44,7 +44,7 @@ const router = createRouter({
       props: {mode: "new"}
     },
     {
-      path: "/groups/:groupID(\\d+)/expense/:id(\\d+)",
+      path: "/groups/:groupID(\\d+)/expense/:expenseID(\\d+)",
       component: () => import("./modules/group/pages/editExpense.vue"),
       props: {mode: "view"}
     },
@@ -52,6 +52,10 @@ const router = createRouter({
       path: "/groups/:groupID(\\d+)/expense/new",
       component: () => import("./modules/group/pages/editExpense.vue"),
       props: {mode: "new"}
+    },
+    {
+      path: "/groups/:groupID(\\d+)/compensation-payments",
+      component: () => import("./modules/group/pages/compensationPayments.vue"),
     },
   ],
 });
