@@ -15,15 +15,23 @@ const groupInfo = ref<GroupResponse>();
 const expenses = ref<ExpenseParams[]>();
 
 const fetchGroupDetails = async () => {
-  const res = await getBackend(`/groups/group?groupId=${route.params.groupID}`);
-  groupInfo.value = res.result;
+  try {
+    const res = await getBackend(`/groups/group?groupId=${route.params.groupID}`);
+    groupInfo.value = res.result;
+  } catch (error) {
+    alert("Konnte Gruppeninfo nicht laden!");
+  }
 };
 
 const fetchExpenses = async () => {
-  const url = `/expenses?groupId=${route.params.groupID}`;
-  const res = await getBackend(url);
-  expenses.value = res.result;
-  expenses.value?.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  try {
+    const url = `/expenses?groupId=${route.params.groupID}`;
+    const res = await getBackend(url);
+    expenses.value = res.result;
+    expenses.value?.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  } catch (error) {
+    alert("Konnte Ausgaben nicht laden!");
+  }
 };
 
 const newExpense = () => {

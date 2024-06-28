@@ -43,19 +43,27 @@ const date = computed({
 
 const groupInfo = ref<GroupResponse>();
 const fetchGroupInfo = async () => {
-  const res = await getBackend(`/groups/group?groupId=${route.params.groupID}`);
-  groupInfo.value = res.result;
-  expense.value.payedFor = res.result.members.map((member:GroupMember) => member.userId);
+  try {
+    const res = await getBackend(`/groups/group?groupId=${route.params.groupID}`);
+    groupInfo.value = res.result;
+    expense.value.payedFor = res.result.members.map((member:GroupMember) => member.userId);
+  } catch (error) {
+    alert("Konnte Gruppeninfo nicht laden!");
+  }
 };
 
 const isEdit = ref(props.mode === "view" ? false : true);
 
 const fetchExpense = async () => {
-  const url = `/expenses/expense?expenseId=${route.params.expenseID}&groupId=${route.params.groupID}`;
-  const data = await getBackend(url);
-  data.result.timestamp = data.result.timestamp;
-  expense.value = data.result;
-  original_expense.value = JSON.parse(JSON.stringify(data.result)); //deep copy
+  try {
+    const url = `/expenses/expense?expenseId=${route.params.expenseID}&groupId=${route.params.groupID}`;
+    const data = await getBackend(url);
+    data.result.timestamp = data.result.timestamp;
+    expense.value = data.result;
+    original_expense.value = JSON.parse(JSON.stringify(data.result)); //deep copy
+  } catch (error) {
+    alert("Konnte Ausgabe nicht laden!");
+  }
 };
 const postExpense = async () => {
   try {
@@ -137,6 +145,7 @@ onMounted( async () => {
         id="title"
         required
         pattern="^[a-zA-Z0-9_%+-]+$"
+        maxlength="128"
         title="bitte Titel eingeben"
         :disabled="!isEdit"
         autofocus
@@ -149,6 +158,7 @@ onMounted( async () => {
         type="number"
         step="0.01"
         min="0.01"
+        max="1000000"
         name="amount"
         id="amount"
         required

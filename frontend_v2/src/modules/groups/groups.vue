@@ -11,8 +11,12 @@ const router = useRouter();
 const groups = ref<GroupResponse[]>();
 
 const fetchGroups = async () => {
-  const response = await getBackend("/groups");
-  groups.value = response.result;
+  try {
+    const response = await getBackend("/groups");
+    groups.value = response.result;
+  } catch (error) {
+    alert("Konnte Gruppen nicht laden!");
+  }
 };
 onMounted(() => {
   fetchGroups();

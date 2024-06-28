@@ -10,8 +10,12 @@ const password = ref("");
 const nickname = ref("");
 
 const submit = async () => {
-  await signup(email.value, password.value, nickname.value);
-  router.push("/groups");
+  try {
+    await signup(email.value, password.value, nickname.value);
+    router.push("/groups");
+  } catch (error) {
+    alert("Registrierung fehlgeschlagen!");
+  }
 };
 </script>
 

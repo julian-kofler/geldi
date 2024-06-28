@@ -9,8 +9,12 @@ const email = ref("");
 const password = ref("");
 
 const submit = async () => {
-  await signin(email.value, password.value);
-  router.push("/groups");
+  try {
+    await signin(email.value, password.value);
+    router.push("/groups");
+  } catch (error) {
+    alert("Einloggen fehlgeschlagen!");
+  }
 };
 </script>
 

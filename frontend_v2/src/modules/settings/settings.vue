@@ -25,7 +25,7 @@ const logout = async () => {
     router.push("/signin");
   } catch (error) {
     console.error("Logout error:", error);
-    alert("Logout failed");
+    alert("Logout fehlgeschlagen");
   }
 };
 const nichtImplementiert = () => {

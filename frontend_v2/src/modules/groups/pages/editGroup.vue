@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
-import { deleteBackend, getBackend, postBackend } from "@/components/backendHandler";
+import { deleteBackend, getBackend, postBackend, putBackend } from "@/components/backendHandler";
 import abortSaveButtons from "@/components/abort_save_buttons.vue";
 import TopBar from "@/components/headerBar.vue";
 import type { GroupResponse } from "@/components/types";
@@ -38,10 +38,14 @@ const removeFromNewMemberEmails = (email:string) => {
 };
 
 const fetchGroupInfo = async () => {
-  const res = await getBackend(`/groups/group?groupId=${route.params.groupID}`);
-  groupInfo.value = res.result;
-  if (props.mode == "view") {
-    new_group_name.value = res.result.name;
+  try {
+    const res = await getBackend(`/groups/group?groupId=${route.params.groupID}`);
+    groupInfo.value = res.result;
+    if (props.mode == "view") {
+      new_group_name.value = res.result.name;
+    }
+  } catch (error) {
+    alert("Konnte Gruppeninfo nicht laden!");
   }
 };
 const postGroup = async () => {
@@ -56,6 +60,21 @@ const postGroup = async () => {
     alert("Konnte Gruppe nicht erstellen");
   }
 };
+const updateGroup = async () => {
+  // try {
+  //   let updatedGroup: GroupResponse = {
+  //     id: groupInfo.value?.id as number,
+  //     name: new_group_name.value,
+  //     completed: groupInfo.value?.completed as number,
+  //     members: [...groupInfo.value?.members.map((member) => member.email), ...new_member_emails.value],
+  //   }
+  //   await putBackend("/groups", JSON.stringify(updatedGroup));
+  //   router.push(`/groups`);
+  // } catch (error) {
+  //   alert("Konnte Grouppe nicht updaten! " + error);
+  // }
+  alert("Gruppe updaten ist noch nicht implementiert.");
+}
 const deleteGroup = async () => {
   try {
     const res = await deleteBackend(`/groups/group/${route.params.groupID}`);
@@ -76,6 +95,14 @@ const abort = () => {
   member_to_add.value = "";
 };
 const isDelete = ref<boolean>(false);
+  const saveGroup = async () => {
+  isEdit.value = false;
+  if (props.mode == "new") {
+    await postGroup();
+  } else if (props.mode == "view") {
+    await updateGroup();
+  }
+};
 onMounted(() => {
   if (props.mode === "view") {
     fetchGroupInfo();
@@ -99,7 +126,7 @@ onMounted(() => {
       </div>
     </template>
   </TopBar>
-  <form @submit.prevent="postGroup()" v-if="!isDelete" class="content-container with-top-bar">
+  <form @submit.prevent="saveGroup()" v-if="!isDelete" class="content-container with-top-bar">
     <div class="input-field">
       <label for="name">Gruppenname</label>
       <input

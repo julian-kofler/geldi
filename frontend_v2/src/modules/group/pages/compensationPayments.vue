@@ -11,14 +11,22 @@ const router = useRouter();
 const compensation_payments = ref<CompensationPayment[]>();
 
 const fetchPayments = async () => {
-  const res = await getBackend(`/expenses/compensation-payments?groupId=${route.params.groupID}`);
-  compensation_payments.value=res.result;
+  try {
+    const res = await getBackend(`/expenses/compensation-payments?groupId=${route.params.groupID}`);
+    compensation_payments.value=res.result;
+  } catch (error) {
+    alert("Laden der Ausgleichszahlungen fehlgeschlagen!");
+  }
 };
 
 const groupInfo = ref<GroupResponse>();
 const fetchGroupInfo = async () => {
-  const res = await getBackend(`/groups/group?groupId=${route.params.groupID}`);
-  groupInfo.value = res.result;
+  try {
+    const res = await getBackend(`/groups/group?groupId=${route.params.groupID}`);
+    groupInfo.value = res.result;
+  } catch (error) {
+    alert("Fehler beim Laden der Gruppeninfo!");
+  }
 };
 const nickname = (userID: number):string => {
   return groupInfo.value?.members.find((member) => member.userId == userID)?.nickname || "Loading..."

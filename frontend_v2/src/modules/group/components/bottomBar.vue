@@ -28,9 +28,13 @@ const NumberToAmountString = (num:number):string => {
   return num.toFixed(2).replace('.', ',') + '€';
 };
 onMounted(()=>{
-  fetchMyCost();
-  fetchMySaldo();
-  fetchMyTotalCost();
+  try {
+    fetchMyCost();
+    fetchMySaldo();
+    fetchMyTotalCost();
+  } catch (error) {
+    alert("Fehler beim Laden der Kosten");
+  }
 })
 </script>
 
