@@ -14,8 +14,9 @@ export interface GroupParams {
 }
 
 export interface GroupMember {
-  id: number;
+  userId: number;
   nickname: string;
+  email: string;
 }
 
 export interface GroupResponse {

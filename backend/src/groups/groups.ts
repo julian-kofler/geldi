@@ -62,7 +62,7 @@ export class GroupManagement {
   
       for (let group of groups) {
         const sqlQuery2 =
-          "SELECT userId, nickname FROM members_in_groups mig inner join users u on mig.userId = u.id WHERE groupID = ?";
+          "SELECT userId, nickname, email FROM members_in_groups mig inner join users u on mig.userId = u.id WHERE groupID = ?";
         const [rows] = await this.db.execute<RowDataPacket[]>(sqlQuery2, [group.id]);
         // Cast rows to Member[] type
         const members: String[] = rows as unknown as String[];
@@ -89,7 +89,7 @@ export class GroupManagement {
       }
 
       const sqlQuery2 =
-        "SELECT userId, nickname FROM members_in_groups mig inner join users u on mig.userId = u.id WHERE groupID = ?";
+        "SELECT userId, nickname, email FROM members_in_groups mig inner join users u on mig.userId = u.id WHERE groupID = ?";
       const [rows] = await this.db.execute<RowDataPacket[]>(sqlQuery2, [groupID]);
       // Cast rows to Member[] type
       const members: String[] = rows as unknown as String[];
