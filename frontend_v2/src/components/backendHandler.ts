@@ -1,5 +1,29 @@
 export const backend_url = "http://localhost:5000/api";
 
+const refreshRefreshToken = async (): Promise<boolean> => {
+  const response = await fetch(backend_url + "/auth/newRefreshToken", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      refreshToken: localStorage.getItem("refreshToken"),
+    }),
+  });
+  if (response.ok) {
+    const data = await response.json();
+    localStorage.setItem("refreshToken", data.refreshToken);
+    return true;
+  } else {
+    console.error(
+      "Failed to refresh Refresh-Token:",
+      response.status,
+      response.statusText
+    );
+    return false;
+  }
+};
+
 const refreshjwtToken = async (): Promise<boolean> => {
   const response = await fetch(backend_url + "/auth/refreshJWT", {
     method: "POST",
