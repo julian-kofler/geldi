@@ -28,7 +28,8 @@ const fetchGroupInfo = async () => {
     alert("Fehler beim Laden der Gruppeninfo!");
   }
 };
-const nickname = (userID: number):string => {
+const nickname = (userID: number, duDich:string):string => {
+  if(userID === getMyUserID()) return duDich;
   return groupInfo.value?.members.find((member) => member.userId == userID)?.nickname || "Loading..."
 }
 
@@ -45,8 +46,8 @@ onMounted(()=>{
   <div class="content-container with-top-bar">
     <div v-for="payment in compensation_payments" class="card">
       <div class="title-and-amount"> 
-        <p><i>{{ nickname(payment.by) }}</i> an <i>{{ nickname(payment.to) }}</i></p>
-        <p>{{ payment.amount.toFixed(2) }} €</p>
+        <span><i>{{ nickname(payment.by,'Du') }}</i> an <i>{{ nickname(payment.to, 'Dich') }}</i></span>
+        <span>{{ payment.amount.toFixed(2) }} €</span>
       </div>
     </div>
   </div>

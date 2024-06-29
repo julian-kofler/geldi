@@ -11,8 +11,8 @@ const props = defineProps<{
 <template>
   <div @click="$emit('editExpense', props.id)" class="card">
     <div class="title-and-amount">
-      <p>{{ props.title }}</p>
-      <p>{{ props.amount }}€</p>
+      <span>{{ props.title }}</span>
+      <span>{{ props.amount }}€</span>
     </div>
     <!-- <div class="payedby-and-date">
       <p>Bezahlt von: {{ props.payedby }}</p>

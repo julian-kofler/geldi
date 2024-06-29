@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { GroupMember } from "@/components/types";
+import {getMyUserID} from "@/components/backendHandler.js"
 
 const props = defineProps<{
   users: GroupMember[];
@@ -33,7 +34,8 @@ const isSelected = (id: number) => {
           selected: isSelected(user.userId),
         }"
       >
-        {{ user.nickname }}
+        <i v-if="user.userId === getMyUserID()">Dich</i>
+        <span v-else>{{ user.nickname }}</span>
       </div>
     </ul>
   </div>

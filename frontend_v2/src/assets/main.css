@@ -7,7 +7,7 @@
   --colorprimary: white;
   --colorsecondary: black;
   --colorsecondary_2: #555;
-  --coloraccent: red;
+  --coloraccent: #D72638;
 }
 body, html {
   max-width: 500px;
@@ -21,7 +21,7 @@ body {
 }
 h1 {
   font: var(--h1);
-  color: red;
+  color: var(--coloraccent);
   text-align: center;
 }
 h2{
@@ -71,9 +71,12 @@ button {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  margin: 4px 2px;
+  margin-bottom: 10px;
   border-radius: 5px;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.1s;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  outline: none;
+  width: 100%;
 }
 button:active {
   transform: scale(0.95); 
@@ -91,13 +94,13 @@ button:active {
 .floating-button {
   position: fixed;
   right: 20px;
-  bottom: 80px;
+  bottom: 70px;
+  width: fit-content;
 }
 .card {
   margin-bottom: 10px;
 
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding: 12px;
 
   padding-left: 12px;
   padding-right: 12px;
@@ -127,8 +130,8 @@ button:active {
   align-items: center;
   height: 60px;
   left:0;
-  background-color: #f8f9fa; /* Lighter background */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Softer shadow */
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
 .bottom-bar {
   bottom: 0;
@@ -141,16 +144,16 @@ button:active {
   flex-direction: column;
   align-items: center;
   color: #333;
-  padding: 10px; /* Added padding for touch targets */
-  transition: color 0.3s; /* Smooth transition for hover effect */
+  padding: 10px; 
+  transition: color 0.3s; 
 }
 
 .top-bar {
   justify-content: space-between;
   top: 0;
-  border-bottom: 2px solid #eaeaea; /* Softer border color */
-  background-color: #f8f9fa; /* Consistent with bottom bar */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added shadow for depth */
+  border-bottom: 2px solid #eaeaea; 
+  background-color: #f8f9fa; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .with-bottom-bar {
   margin-bottom: 60px;

@@ -36,11 +36,11 @@ const nichtImplementiert = () => {
 <template>
   <div class="content-container with-bottom-bar">
     <h1>Einstellungen</h1>
-    <button @click="logout()" class="btn-primary">Logout</button>
-    <button @click="nichtImplementiert" class="btn-primary">
+    <button @click="logout()" class="btn-secondary">Logout</button>
+    <button @click="nichtImplementiert" class="btn-secondary">
       Passwort ändern
     </button>
-    <button @click="nichtImplementiert" class="btn-primary">
+    <button @click="nichtImplementiert" class="btn-secondary">
       Nickname ändern
     </button>
     <button @click="nichtImplementiert" class="btn-primary">

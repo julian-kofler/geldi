@@ -10,7 +10,7 @@ const props = defineProps({
   <div class="card">
     <div>
       <!-- TODO: Add Group picture -->
-      <p>{{ props.name }}</p>
+      <span>{{ props.name }}</span>
       <!-- TODO: Add sum(own expenses) -->
       <!-- TODO: Add sum(total expenses) -->
     </div>

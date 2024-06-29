@@ -27,6 +27,6 @@
 }
 
 .active {
-  color: rgb(255, 0, 0);
+  color: var(--coloraccent);
 }
 </style>

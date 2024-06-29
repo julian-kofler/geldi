@@ -180,13 +180,13 @@ onMounted( async () => {
     <div class="input-field">
       <label for="payedby">Bezahlt von</label>
       <select v-model="expense.payedBy" class="like-input" :disabled="!isEdit">
-        <option disabled value="0">Please select one</option>
+        <option disabled value="0">Bitte jemand auswählen</option>
         <option
           v-for="member in groupInfo?.members"
           :key="member.userId"
           :value="member.userId"
         >
-          {{ member.nickname }}
+          {{ member.userId === getMyUserID() ? 'Dir' : member.nickname }}
         </option>
       </select>
     </div>
@@ -206,14 +206,13 @@ onMounted( async () => {
   </form>
   <div v-if="isDelete" class="content-container with-top-bar">
     <h1>Ausgabe löschen ?</h1>
-    <div class="button-abort-save">
-      <button @click="abort" class="btn-secondary biggerButton" type="submit">
-        abbrechen
-      </button>
-      <button @click="deleteExpense" class="btn-primary" type="submit">
-        Löschen
-      </button>
-    </div>
+    <abort_save_buttons
+      v-if="isEdit == true"
+      @abort="isDelete = false"
+      @save="deleteExpense"
+      :primaryButtonText="'Löschen'"
+      :bigger="'secondary'"
+    ></abort_save_buttons>
   </div>
 </template>
 
