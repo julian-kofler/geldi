@@ -126,7 +126,7 @@ onMounted( async () => {
       <div v-if="isEdit == false" @click="isEdit = true">
         <font-awesome-icon icon="fa-solid fa-pen-to-square" />
       </div>
-      <div v-if="isEdit == true && isDelete == false" @click="isDelete = true">
+      <div v-if="isEdit == true && isDelete == false && props.mode == 'view'" @click="isDelete = true">
         <font-awesome-icon icon="fa-solid fa-trash-can" />
       </div>
     </template>
