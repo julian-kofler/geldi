@@ -56,6 +56,7 @@ const postGroup = async () => {
     };
     await postBackend("/groups", JSON.stringify(body));
     router.push(`/groups`);
+    isEdit.value = false;
   } catch {
     alert("Konnte Gruppe nicht erstellen");
   }
@@ -70,6 +71,7 @@ const updateGroup = async () => {
   //   }
   //   await putBackend("/groups", JSON.stringify(updatedGroup));
   //   router.push(`/groups`);
+  //   isEdit.value = false;
   // } catch (error) {
   //   alert("Konnte Grouppe nicht updaten! " + error);
   // }
@@ -96,7 +98,6 @@ const abort = () => {
 };
 const isDelete = ref<boolean>(false);
   const saveGroup = async () => {
-  isEdit.value = false;
   if (props.mode == "new") {
     await postGroup();
   } else if (props.mode == "view") {

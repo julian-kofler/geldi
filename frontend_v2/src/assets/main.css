@@ -183,3 +183,6 @@ button:active {
   display: flex;
   justify-content: space-between;
 }
+.validation-error{
+  color: red;
+}

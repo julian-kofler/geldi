@@ -68,6 +68,7 @@ const fetchExpense = async () => {
 const postExpense = async () => {
   try {
     const res = await postBackend("/expenses", JSON.stringify(expense.value));
+    isEdit.value = false;
     backToGroups();
   } catch (error) {
     alert("Error: " + error);
@@ -76,6 +77,7 @@ const postExpense = async () => {
 const updateExpense = async () => {
   try {
     const res = await putBackend("/expenses", JSON.stringify(expense.value));
+    isEdit.value = false;
     backToGroups();
   } catch (error) {
     alert("Error: " + error);
@@ -92,7 +94,6 @@ const abort = () => {
   expense.value = JSON.parse(JSON.stringify(original_expense.value)); //deep copy
 };
 const saveExpense = async () => {
-  isEdit.value = false;
   if (props.mode == "new") {
     await postExpense();
   } else if (props.mode == "view") {
@@ -196,6 +197,7 @@ onMounted( async () => {
         :edit="isEdit"
         :users="groupInfo?.members as GroupMember[]"
       ></selectUser>
+      <i v-if="expense.payedFor.length < 1" class="validation-error">muss für min. eine Person bezahlt sein</i>
     </div>
     <abort_save_buttons
       v-if="isEdit == true"
