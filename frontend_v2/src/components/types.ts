@@ -8,6 +8,7 @@ export interface GroupParams {
   export interface GroupMember {
     userId: number;
     nickname: string;
+    email: string;
   }
   
   export interface GroupResponse {
