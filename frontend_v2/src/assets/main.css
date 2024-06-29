@@ -47,7 +47,9 @@ input, .like-input{
   border-radius: 5px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   outline: none;
-  width: 90%;
+  width: 100%;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 input:focus, select:focus{
   border-color: var(--coloraccent);
@@ -71,6 +73,10 @@ button {
   display: inline-block;
   margin: 4px 2px;
   border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.1s;
+}
+button:active {
+  transform: scale(0.95); 
 }
 .btn-primary {
   background-color: var(--coloraccent);
