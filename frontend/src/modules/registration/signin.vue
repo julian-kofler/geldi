@@ -16,6 +16,10 @@ const submit = async () => {
     alert("Einloggen fehlgeschlagen!");
   }
 };
+
+const nichtImplementiert = () => {
+  alert("noch nicht implementiert");
+};
 </script>
 
 <template>
@@ -60,7 +64,7 @@ const submit = async () => {
         </button>
       </div>
       <div class="login_register_box">
-        <button class="btn-secondary" @click="alert('noch nicht implementiert')">
+        <button class="btn-secondary" @click="nichtImplementiert">
           Passwort vergessen?
         </button>
       </div>      
