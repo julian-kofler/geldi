@@ -21,7 +21,7 @@ const new_member_emails = ref<string[]>([]);
 const member_to_add = ref<string>("");
 
 const add_member_to_list = () => {
-  const regex_email = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const regex_email = /^[a-zA-Z0-9\._%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$/;
   if (!regex_email.test(member_to_add.value)) {
     alert("Invalid Email");
     return;
@@ -138,7 +138,7 @@ onMounted(() => {
         autofocus
         :disabled="!isEdit"
         required
-        pattern="^[a-zA-Z0-9_%+-]+$"
+        pattern="^[a-zA-Z0-9_%\+\-]+$"
       />
     </div>
     <form @submit.prevent="add_member_to_list()" v-if="isEdit == true" class="input-field">
@@ -152,7 +152,7 @@ onMounted(() => {
           placeholder="moritz.müller@abc.de"
           :disabled="!isEdit"
           required
-          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+          pattern="^[a-zA-Z0-9\._%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$"
         />
         <button
           class="btn-primary"

@@ -145,7 +145,7 @@ onMounted( async () => {
         name="title"
         id="title"
         required
-        pattern="^[a-zA-Z0-9_%+-]+$"
+        pattern="^[a-zA-Z0-9_%\+\-]+$"
         maxlength="128"
         title="bitte Titel eingeben"
         :disabled="!isEdit"

@@ -37,7 +37,7 @@ const submit = async () => {
           v-model="email"
           placeholder=""
           required
-          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+          pattern="[a-zA-Z0-9\._%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}"
         />
       </div>
       <div class="input-field">
