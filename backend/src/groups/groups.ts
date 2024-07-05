@@ -154,11 +154,26 @@ export class GroupManagement {
 
   public async deleteGroup(groupID: number): Promise<{ statusCode: number; message: string }> {
     try {
-      const sqlQuery = "DELETE FROM members_in_groups WHERE groupID = ?";
-      await this.db.execute(sqlQuery, [groupID]);
+      await this.db.beginTransaction();
+      
+      const deletePayedForQuery = `
+        DELETE FROM payed_for 
+        WHERE expenseID IN (
+          SELECT id FROM expenses WHERE groupId = ?
+        )`;
+      await this.db.execute(deletePayedForQuery, [groupID]);
+      
+      const deleteExpensesQuery = "DELETE FROM expenses WHERE groupID = ?";
+      await this.db.execute(deleteExpensesQuery, [groupID]);
+      
+      const deleteMembersQuery = "DELETE FROM members_in_groups WHERE groupID = ?";
+      await this.db.execute(deleteMembersQuery, [groupID]);
 
-      const sqlQuery2 = "DELETE FROM `groups` WHERE id = ?";
-      await this.db.execute(sqlQuery2, [groupID]);
+      const deleteGroupQuery = "DELETE FROM `groups` WHERE id = ?";
+      await this.db.execute(deleteGroupQuery, [groupID]);
+
+      await this.db.commit();
+
       return { statusCode: 200, message: "Group deleted successfully" };
     } 
     catch (error) {
