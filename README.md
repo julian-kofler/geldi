@@ -1,3 +1,9 @@
+# App Screenshots
+
+| Login Page                                 | Groups                                   |Group|Compensation Payments|
+| ------------------------------------------ | ------------------------------------------- |----|----|
+| ![Login Page](demo_screenshots/signin.png) | ![Groups Page](demo_screenshots/groups.png) |![Group Page](demo_screenshots/group.png)|![CompensationPayments Page](demo_screenshots/compensation_payments.png)|
+
 # Setup
 ## Requirements
 
