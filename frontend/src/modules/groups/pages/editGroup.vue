@@ -138,7 +138,7 @@ onMounted(() => {
         autofocus
         :disabled="!isEdit"
         required
-        pattern="^[a-zA-Z0-9_%\+\-]+$"
+        pattern="\S+.*"
       />
     </div>
     <form @submit.prevent="add_member_to_list()" v-if="isEdit == true" class="input-field">
