@@ -165,15 +165,14 @@ export async function signup(
 
     const data = await response.json();
     if (!response.ok) {
-      alert("Fehler! " + data.message);
-      return;
+      throw new Error(data.message);
     }
 
     localStorage.setItem("jwt", data.jwt);
     localStorage.setItem("refreshToken", data.refreshToken);
   } catch (error) {
-    alert("Fehler! Keine Verbindung zum Server!");
     console.error(error);
+    throw error;
   }
 }
 export async function signin(email: string, password: string) {
